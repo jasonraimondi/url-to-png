@@ -24,7 +24,9 @@ async function renderUrl(url: string) {
 app.get('/', async (req, res) => {
   const errors = [];
   
-  if (!req.query.url) {
+  const url = req.query.url;
+  
+  if (!url) {
     errors.push('url is required');
   }
   
@@ -36,7 +38,7 @@ app.get('/', async (req, res) => {
   let screenshotBuffer = false;
   
   try {
-    screenshotBuffer = await renderUrl(req.query.url);
+    screenshotBuffer = await renderUrl(url);
   } catch (err) {
     console.log(err.message);
   }
