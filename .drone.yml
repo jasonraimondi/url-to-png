@@ -1,6 +1,0 @@
-pipeline:
-  frontend:
-    image: node:alpine
-    commands:
-      - npm install -q --no-color --no-progress
-      - npm run build
