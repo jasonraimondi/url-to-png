@@ -11,7 +11,7 @@ import { StorageService } from './services/storage/StorageService';
 import { StubStorageService } from './services/storage/providers/StubStorageService';
 
 const projectRoot = join(__dirname, '../');
-const AWS_BUCKET = 'screenpreview.eventfarm';
+const AWS_BUCKET = process.env.AWS_BUCKET;
 
 const storageService = {
   provide: 'StorageService',

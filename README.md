@@ -10,7 +10,7 @@ cd url-to-png
 docker-compose up
 ```
 
-If you want to serve via node locally, you will need to update [app.module.ts](./src/app.module.ts) to point CouchDB to `localhost:5984` instead of `couchdb:5984`
+If you want to serve via node locally:
 
 ```
 npm install
@@ -23,12 +23,47 @@ Navigate to the following URL
 localhost:3000?url=https://jasonraimondi.com
 ```
 
+Required Params:
+
+- `url`: string, valid URL
+
+Optional Params:
+
+- `forceReload`: true - force reload image if it is already stored
+- `width`: number - width of screenshot
+- `height`: number - height of screenshot
+- `viewPortWidth`: number - width of render viewport
+- `viewPortHeight`: number - height of render viewport
+
+### Using Storage
+
+#### AWS S3
+
+To use AWS S3 you are going to need to copy the environment file and the aws config sample.
+
+```
+cp config/.env.sample config/.env
+cp config/aws-config.sample.json config/aws-config.json
+```
+
+Make sure that `AWS_S3=true` and `AWS_BUCKET` are set properly, and the aws-config.json exists.
+
+#### CouchDB
+
+To use CouchDB, you are going to need to copy the environment file
+
+```
+cp config/.env.sample config/.env
+```
+
+Make sure that `COUCH_DB=true` and the proper values for your instance are filled out.
 
 ### Tools:
 
+- NestJS/Express web server
 - Puppeteer for headless chrome image rendering
 - Sharp for image resizing
-- CouchDB for image store
+- CouchDB or AWS S3 for image store
 
 ### Docker
 
