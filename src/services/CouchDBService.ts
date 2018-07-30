@@ -14,11 +14,10 @@ export class CouchDBService {
 
     try {
       await images.attachment.get(imageId, 'urlto.png');
+      return true;
     } catch (err) {
       return false;
     }
-
-    return true;
   }
 
   async storeImage(imageId: string, image) {
@@ -26,14 +25,11 @@ export class CouchDBService {
 
     try {
       await images.attachment.get(imageId, 'urlto.png');
-      console.log('successfully something');
       return true;
     } catch (err) {
-      console.log(`Image not found for url. Creating it.`);
+      await images.attachment.insert(imageId, 'urlto.png', image, 'image/png');
     }
 
-    await images.attachment.insert(imageId, 'urlto.png', image, 'image/png');
-    console.log('successfully something else');
     return true;
   }
 }
