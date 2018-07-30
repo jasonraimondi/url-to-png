@@ -18,5 +18,8 @@ services:
     depends_on:
     - couchdb
     build: ./
+    volumes:
+      - "./src:/app/src"
+    command: npm run serve
     ports:
     - "3000:3000"

@@ -1,14 +1,16 @@
 {
-  "name": "@jmondi/recipes",
-  "description": "Webpack Starter Pack",
+  "name": "@jmondi/url-to-png",
+  "description": "URL to PNG Server",
   "private": true,
   "scripts": {
     "clean": "rm -rf dist/*",
+    "serve:prod": "node dist/main.package.js",
     "serve": "ts-node src/main.ts",
     "dev": "run-s clean build:dev",
     "prod": "run-s clean build:prod",
     "build:dev": "webpack --config build/webpack.conf.js",
-    "build:prod": "cross-env NODE_ENV=production webpack --config build/webpack.conf.js"
+    "build:prod": "cross-env NODE_ENV=production webpack --config build/webpack.conf.js",
+    "pretty": "prettier --single-quote --print-width 100 --parser typescript --trailing-comma es5 --write src/**/*.ts build/**/*.js"
   },
   "engines": {
     "node": ">= 9.11.0",
@@ -34,6 +36,7 @@
     "@babel/preset-env": "^7.0.0-beta.54",
     "@babel/register": "^7.0.0-beta.54",
     "@types/node": "^10.5.4",
+    "@types/puppeteer": "^1.5.1",
     "babel-loader": "^8.0.0-beta.4",
     "copy-webpack-plugin": "^4.5.2",
     "cross-env": "^5.2.0",

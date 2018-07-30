@@ -10,27 +10,23 @@ const babelLoader = {
   loader: 'babel-loader',
   options: {
     cacheDirectory: true,
-    presets: [
-      ['@babel/preset-env']
-    ],
-    compact: false
-  }
+    presets: [['@babel/preset-env']],
+    compact: false,
+  },
 };
 
-const plugins = [
-];
+const plugins = [];
 
 module.exports = {
   target: 'node',
   mode: devMode ? 'development' : 'production',
-  devtool: devMode ? 'eval-cheap-module-source-map' : false,
   context: projectRoot,
   entry: {
-    'main': './src/main.ts',
+    main: './src/main.ts',
   },
   output: {
     path: projectRoot + '/dist',
-    filename: devMode ? '[name].package.js' : '[name].[hash].package.js',
+    filename: '[name].package.js',
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
@@ -38,14 +34,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
-        use: [
-          babelLoader,
-          {loader: 'ts-loader'}
-        ]
-      }
-    ]
+        use: [babelLoader, { loader: 'ts-loader' }],
+      },
+    ],
   },
-  plugins
+  plugins,
 };

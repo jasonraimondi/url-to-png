@@ -3,12 +3,27 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CouchDBService {
-  constructor(private readonly nano: nano.ServerScope) {
+  constructor(private readonly nano: nano.ServerScope) {}
+
+  get images() {
+    return this.nano.use('images');
   }
-  
+
+  async imageExists(imageId: string) {
+    const images = this.images;
+
+    try {
+      await images.attachment.get(imageId, 'urlto.png');
+    } catch (err) {
+      return false;
+    }
+
+    return true;
+  }
+
   async storeImage(imageId: string, image) {
-    const images = this.nano.use('images');
-    
+    const images = this.images;
+
     try {
       await images.attachment.get(imageId, 'urlto.png');
       console.log('successfully something');
@@ -16,7 +31,7 @@ export class CouchDBService {
     } catch (err) {
       console.log(`Image not found for url. Creating it.`);
     }
-  
+
     await images.attachment.insert(imageId, 'urlto.png', image, 'image/png');
     console.log('successfully something else');
     return true;
