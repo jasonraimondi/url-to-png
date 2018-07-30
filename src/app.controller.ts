@@ -45,8 +45,6 @@ export class AppController {
     try {
       imageBuffer = await renderUrl(query.url);
       await this.couchDBService.storeImage(imageId, imageBuffer);
-      response.json(`http://localhost:5984/images/${imageId}/urlto.png`);
-      return;
     } catch (err) {
       response.json({
         message: err.message,
@@ -54,5 +52,8 @@ export class AppController {
       });
       return;
     }
+  
+    // response.json(`http://localhost:5984/images/${imageId}/urlto.png`);
+    return;
   }
 }
