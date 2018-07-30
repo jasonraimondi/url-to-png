@@ -24,6 +24,8 @@
   "dependencies": {
     "@nestjs/common": "^5.1.0",
     "@nestjs/core": "^5.1.0",
+    "aws-sdk": "^2.282.1",
+    "dotenv": "^6.0.0",
     "md5": "^2.2.1",
     "nano": "^7.0.0",
     "puppeteer": "^1.6.1",

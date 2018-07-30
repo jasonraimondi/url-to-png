@@ -1,22 +1,19 @@
 version: '3.3'
 
 services:
-  couchdb:
-    restart: on-failure
-    image: couchdb:2.1
-    ports:
-    - "5984:5984"
-#    volumes:
-#      - "./data/couchdb/data:/opt/couchdb/data"
-#      - "./data/couchdb/config:/opt/couchdb/etc"
-    environment:
-      COUCHDB_USER: jason
-      COUCHDB_PASSWORD: couchdb
+  ## Optional CouchDB
+#  couchdb:
+#    image: couchdb:2.1
+#    ports:
+#    - "5984:5984"
+##    volumes:
+##      - "./data/couchdb/data:/opt/couchdb/data"
+##      - "./data/couchdb/config:/opt/couchdb/etc"
+#    environment:
+#      COUCHDB_USER: jason
+#      COUCHDB_PASSWORD: couchdb
 
   url-to-png:
-    restart: on-failure
-    depends_on:
-    - couchdb
     build: ./
     volumes:
       - "./src:/app/src"

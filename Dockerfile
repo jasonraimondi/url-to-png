@@ -1,13 +1,5 @@
 FROM node:stretch
 
-WORKDIR /app
-
-COPY ./src /app/src
-COPY ./build /app/build
-COPY ./package.json /app/package.json
-COPY ./package-lock.json /app/package-lock.json
-COPY ./tsconfig.json /app/tsconfig.json
-
 RUN apt-get update \
     && apt-get install -yq \
         gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
@@ -21,5 +13,15 @@ RUN apt-get update \
     && rm -f dumb-init_*.deb \
     && apt-get clean \
     && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && npm install
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY ./src /app/src
+COPY ./build /app/build
+COPY ./package.json /app/package.json
+COPY ./package-lock.json /app/package-lock.json
+COPY ./tsconfig.json /app/tsconfig.json
+COPY ./config /app/config
+
+RUN npm install

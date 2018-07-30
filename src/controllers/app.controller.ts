@@ -1,34 +1,28 @@
-import { Get, Controller, Req, Query, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import * as md5 from 'md5';
-import { CouchDBService } from '../services/CouchDBService';
-import { RenderImageService } from '../services/RenderImageService';
 
-export class imageDTO {
-  readonly url: string;
-  // readonly forceRefresh?: boolean;
-  // readonly width?: number;
-  // readonly height?: number;
-  // readonly viewPortHeight?: number;
-  // readonly viewPortWidth?: number;
-}
+import { ConfigInterface, RenderImageService } from '../services/RenderImageService';
+import { BaseController } from './base.controller';
+import { imageDTO } from '../dtos/imageDTO';
+import { StorageService } from '../services/storage/StorageService';
 
 @Controller()
-export class AppController {
+export class AppController extends BaseController {
   constructor(
-    private readonly couchDBService: CouchDBService,
+    private readonly storageService: StorageService,
     private readonly renderImageService: RenderImageService
-  ) {}
+  ) {
+    super();
+  }
 
   @Get()
   async root(@Res() response, @Query() query: imageDTO) {
     const errors = [];
+    const config: ConfigInterface = {};
+    let forceReload = false;
 
-    const url = query.url;
-
-    if (!url) {
-      errors.push({
-        name: 'url',
-      });
+    if (!query.url) {
+      errors.push('valid query is required');
     }
 
     if (errors.length > 0) {
@@ -36,25 +30,57 @@ export class AppController {
       return;
     }
 
-    let imageBuffer: any = false;
+    if (query.width) {
+      config.width = Number(query.width);
+    }
+
+    if (query.height) {
+      config.height = Number(query.height);
+    }
+
+    if (query.viewPortWidth) {
+      config.viewPortWidth = Number(query.viewPortWidth);
+    }
+
+    if (query.viewPortHeight) {
+      config.viewPortHeight = Number(query.viewPortHeight);
+    }
+
+    if (query.forceReload) {
+      forceReload = true;
+    }
 
     const date = new Date();
     const dateString = date.toLocaleDateString().replace('/', '-');
+    const imageId = md5(query.url + '_' + dateString + this.configToString(config));
 
-    const imageId = md5(url + '__' + dateString);
+    let imageBuffer: any = await this.storageService.fetchImage(imageId);
 
-    try {
-      imageBuffer = await this.renderImageService.screenshot(query.url);
-      await this.couchDBService.storeImage(imageId, imageBuffer);
-    } catch (err) {
-      response.json({
-        message: err.message,
-        trace: err.trace,
-      });
-      return;
+    if (imageBuffer === null || forceReload) {
+      try {
+        imageBuffer = await this.renderImageService.screenshot(query.url, config);
+      } catch (err) {
+        return this.errorMessage(err, response);
+      }
+
+      try {
+        await this.storageService.storeImage(imageId, imageBuffer);
+      } catch (err) {
+        console.log(err.message);
+      }
     }
 
     response.set({ 'Content-Type': 'image/png' }).send(imageBuffer);
     return;
+  }
+
+  private configToString(config: ConfigInterface) {
+    let string = '';
+
+    for (let i in config) {
+      string += `_${i}-${config[i]}`;
+    }
+
+    return string;
   }
 }
