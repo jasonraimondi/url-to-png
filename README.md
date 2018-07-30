@@ -8,8 +8,11 @@ Serve the project
 git clone git@github.com:jasonraimondi/url-to-png.git
 cd url-to-png
 docker-compose up
+```
 
-// if you want to serve via node locally, you will need to update app.module.ts to point CouchDB to localhost:5984 instead of couchdb:5984
+If you want to serve via node locally, you will need to update [app.module.ts](./src/app.module.ts) to point CouchDB to `localhost:5984` instead of `couchdb:5984`
+
+```
 npm install
 npm run serve
 ```
