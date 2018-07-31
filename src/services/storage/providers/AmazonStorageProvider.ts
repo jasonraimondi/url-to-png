@@ -2,7 +2,7 @@ import * as S3 from 'aws-sdk/clients/s3';
 import { GetObjectRequest, PutObjectRequest } from 'aws-sdk/clients/s3';
 import { StorageInterface } from '../StorageInterface';
 
-export class AmazonS3Service implements StorageInterface {
+export class AmazonStorageProvider implements StorageInterface {
   constructor(private readonly s3: S3, private readonly BUCKET_NAME: string) {}
 
   private getImageId(imageId: string) {

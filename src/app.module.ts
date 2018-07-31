@@ -4,12 +4,12 @@ import { join } from 'path';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './controllers/app.controller';
-import { CouchDBService } from './services/storage/providers/CouchDBService';
 import { RenderImageService } from './services/RenderImageService';
-import { AmazonS3Service } from './services/storage/providers/AmazonS3Service';
 import { StorageService } from './services/storage/StorageService';
 import { StubStorageService } from './services/storage/providers/StubStorageService';
 import { StorageInterface } from './services/storage/StorageInterface';
+import { AmazonStorageProvider } from './services/storage/providers/AmazonStorageProvider';
+import { CouchDBStorageProvider } from './services/storage/providers/CouchDBStorageProvider';
 
 const projectRoot = join(__dirname, '../');
 const AWS_BUCKET = process.env.AWS_BUCKET;
@@ -21,9 +21,9 @@ const storageService = {
 
     if (process.env.AWS_S3) {
       AWS.config.loadFromPath(projectRoot + '/config/aws-config.json');
-      storageInterface = new AmazonS3Service(new AWS.S3(), AWS_BUCKET);
+      storageInterface = new AmazonStorageProvider(new AWS.S3(), AWS_BUCKET);
     } else if (process.env.COUCH_DB) {
-      storageInterface = new CouchDBService(nano('http://jason:couchdb@couchdb:5984'));
+      storageInterface = new CouchDBStorageProvider(nano('http://jason:couchdb@couchdb:5984'));
     }
 
     return new StorageService(storageInterface);

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { StorageInterface } from '../StorageInterface';
 
 @Injectable()
-export class CouchDBService implements StorageInterface {
+export class CouchDBStorageProvider implements StorageInterface {
   constructor(private readonly nano: nano.ServerScope) {}
 
   get images() {
