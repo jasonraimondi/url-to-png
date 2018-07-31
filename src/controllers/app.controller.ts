@@ -51,8 +51,9 @@ export class AppController extends BaseController {
     }
 
     const date = new Date();
-    const dateString = date.toLocaleDateString().replace('/', '-');
-    const imageId = md5(query.url + '_' + dateString + this.configToString(config));
+    const dateString = date.toLocaleDateString().replace(/\//g, '-');
+    const imageName = query.url + '_' + dateString + this.configToString(config);
+    const imageId = md5(imageName);
 
     let imageBuffer: any = await this.storageService.fetchImage(imageId);
 
