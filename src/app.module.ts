@@ -1,14 +1,17 @@
+import AWS = require('aws-sdk');
 import * as nano from 'nano';
+import * as puppeteer from 'puppeteer';
+import * as sharp from 'sharp';
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 
 import { AppController } from './controllers/app.controller';
 import { CouchDBService } from './services/storage/providers/CouchDBService';
 import { RenderImageService } from './services/RenderImageService';
 import { AmazonS3Service } from './services/storage/providers/AmazonS3Service';
-import { join } from 'path';
-import AWS = require('aws-sdk');
 import { StorageService } from './services/storage/StorageService';
 import { StubStorageService } from './services/storage/providers/StubStorageService';
+import { StorageInterface } from './services/storage/StorageInterface';
 
 const projectRoot = join(__dirname, '../');
 const AWS_BUCKET = process.env.AWS_BUCKET;
@@ -16,9 +19,9 @@ const AWS_BUCKET = process.env.AWS_BUCKET;
 const storageService = {
   provide: 'StorageService',
   useFactory() {
-    let storageInterface = new StubStorageService();
+    let storageInterface: StorageInterface = new StubStorageService();
 
-    if (process.env.COUCH_DB) {
+    if (process.env.AWS_S3) {
       AWS.config.loadFromPath(projectRoot + '/config/aws-config.json');
       storageInterface = new AmazonS3Service(new AWS.S3(), AWS_BUCKET);
     } else if (process.env.COUCH_DB) {
@@ -31,8 +34,12 @@ const storageService = {
 
 const renderImageService = {
   provide: 'RenderImageService',
-  useFactory() {
-    return new RenderImageService();
+  async useFactory() {
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--headless', '--disable-gpu'],
+    });
+    
+    return new RenderImageService(browser, sharp);
   },
 };
 

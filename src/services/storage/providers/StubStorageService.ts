@@ -1,13 +1,13 @@
 import { StorageInterface } from '../StorageInterface';
 
 export class StubStorageService implements StorageInterface {
-  fetchImage(imageId: string): Promise<any> {
+  fetchImage(imageId: string): Promise<null> {
     console.log(`stub fetch image: ${imageId}`);
-    return undefined;
+    return null;
   }
 
-  storeImage(imageId: string, image: Buffer): Promise<any> {
+  storeImage(imageId: string, image: Buffer): Promise<null> {
     console.log(`stub store image: ${imageId}`);
-    return undefined;
+    return null;
   }
 }
