@@ -1,7 +1,5 @@
 import AWS = require('aws-sdk');
 import * as nano from 'nano';
-import * as puppeteer from 'puppeteer';
-import * as sharp from 'sharp';
 import { join } from 'path';
 import { Module } from '@nestjs/common';
 
@@ -35,11 +33,7 @@ const storageService = {
 const renderImageService = {
   provide: 'RenderImageService',
   async useFactory() {
-    const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--headless', '--disable-gpu'],
-    });
-    
-    return new RenderImageService(browser, sharp);
+    return new RenderImageService();
   },
 };
 

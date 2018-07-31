@@ -1,5 +1,6 @@
 import * as sharp from 'sharp';
 import { Browser, Page } from 'puppeteer';
+import * as puppeteer from 'puppeteer';
 
 export interface ConfigInterface {
   width?: number;
@@ -9,11 +10,8 @@ export interface ConfigInterface {
 }
 
 export class RenderImageService {
-  constructor(
-    private readonly browser: Browser,
-    private readonly sharp: sharp,
-  ) {}
-  
+  private readonly sharp: sharp;
+
   async screenshot(url: string, config: ConfigInterface = {}): Promise<Buffer | false> {
     config = {
       width: 250,
@@ -25,10 +23,11 @@ export class RenderImageService {
 
     let page: null | Page = null;
     let screenshot: null | Buffer = null;
-
+    
     try {
-      page = await this.browser.newPage();
-
+      const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--headless', '--disable-gpu', '--disable-dev-shm-usage'],
+      });      page = await browser.newPage();
       await page.goto(url);
       await page.setViewport({
         width: config.viewPortWidth,
@@ -36,7 +35,7 @@ export class RenderImageService {
       });
       screenshot = await page.screenshot();
       screenshot = await this.resize(screenshot, config.width, config.height);
-      await page.close();
+      await browser.close();
       return screenshot;
     } catch (err) {
       console.log(err.message);
