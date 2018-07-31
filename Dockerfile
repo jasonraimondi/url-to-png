@@ -24,4 +24,4 @@ COPY ./package-lock.json /app/package-lock.json
 COPY ./tsconfig.json /app/tsconfig.json
 COPY ./config /app/config
 
-RUN npm install
+RUN npm install -q --no-color --no-progress
