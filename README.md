@@ -56,11 +56,12 @@ http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true&isMobile
 ## Image Storage / Cache
 
 NOTE: Currently you are only able to use **ONE** storage option at a time.
+NOTE 2: If you are running in Docker, you should skip the .env and load the environment variables into your container.
 
 You are going to need to copy the environment file to use any of the storage options. By default no images are cached.
 
 ```
-cp config/.env.sample config/.env
+cp .env.sample .env
 ```
 
 #### AWS S3
