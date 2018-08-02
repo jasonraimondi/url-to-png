@@ -13,27 +13,45 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 
 ## How to Use:
 
+Well... I am a huge fan of docker. So we are going to use docker.
+
+#### A) Docker
+
+Run the following command:
+
+```
+docker run --rm -p 3000:3000 jasonraimondi/url-to-png
+```
+
+On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)
+
+#### B) Local Serve
+
 Serve the project
 
 ```
 git clone git@github.com:jasonraimondi/url-to-png.git
 cd url-to-png
-docker-compose up
-```
-
-If you want to serve via node locally:
-
-```
 npm install
-npm run serve
+npm run dev
 ```
 
-Navigate to the following URL
+#### Up and Running?
+
+Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should get back an image capture of `https://google.com`. 
+
+Go ahead and try any of the following:
 
 ```
-localhost:3000?url=https://jasonraimondi.com
+http://localhost:3000?url=https://www.jasonraimondi.com
+http://localhost:3000?url=https://www.jasonraimondi.com&forceReload=true
+http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true
+http://localhost:3000?url=https://www.jasonraimondi.com&isMobile=true
+http://localhost:3000?url=https://www.jasonraimondi.com&width=400&height=400
+http://localhost:3000?url=https://www.jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://www.jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
 ```
-
 
 ## Image Storage / Cache
 
@@ -68,28 +86,3 @@ COUCH_DB_HOST=
 COUCH_DB_USER=
 COUCH_DB_PASS=
 ```
-
-## Docker
-
-Run the following command:
-
-```
-docker run --rm -p 3000:3000 jasonraimondi/url-to-png
-```
-
-Navigate to `localhost:3000?url=https://google.com`. 
-
-Try any of the following:
-
-```
-http://localhost:3000?url=https://google.com
-http://localhost:3000?url=https://google.com&forceReload=true
-http://localhost:3000?url=https://google.com&isFullPage=true
-http://localhost:3000?url=https://google.com&isMobile=true
-http://localhost:3000?url=https://google.com&width=400&height=400
-http://localhost:3000?url=https://google.com&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://google.com&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://google.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
-```
-
-On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)
