@@ -1,6 +1,33 @@
 # URL to PNG
 
-### How to Use:
+A URL to PNG generator over HTTP with a fairly simple API accessed via query params passed to the servers single endpoint.
+
+- `url: string`
+    - **Required**
+    - Valid URL to be captured
+- `width: number`
+    - Default: `250`
+    - Width of output screenshot
+- `height: number`
+    - Default: `250`
+    - Height of output screenshot
+- `viewPortWidth: number`
+    - Default: `1080`
+    - Width of render viewport
+- `viewPortHeight: number`
+    - Default: `1080`
+    - Height of render viewport
+- `forceReload: boolean`
+    - Default: `false`
+    - Force cached image reload
+- `isMobile: boolean`
+    - Default: false
+    - Adds mobile flag to user agent
+- `isFullPage: boolean`
+    - Default: false
+    - Render full page instead of viewport crop
+
+## How to Use:
 
 Serve the project
 
@@ -23,50 +50,62 @@ Navigate to the following URL
 localhost:3000?url=https://jasonraimondi.com
 ```
 
-Required Params:
 
-- `url`: string, valid URL
+## Image Storage / Cache
 
-Optional Params:
+NOTE: Currently you are only able to use **ONE** storage option at a time.
 
-- `forceReload`: true - force reload image if it is already stored
-- `width`: number - width of screenshot
-- `height`: number - height of screenshot
-- `viewPortWidth`: number - width of render viewport
-- `viewPortHeight`: number - height of render viewport
+You are going to need to copy the environment file to use any of the storage options. By default no images are cached.
 
-### Using Storage
+```
+cp config/.env.sample config/.env
+```
 
 #### AWS S3
 
-To use AWS S3 you are going to need to copy the environment file and the aws config sample.
+To use Amazon S3, ensure the following variables are loaded in your `.env`:
 
 ```
-cp config/.env.sample config/.env
-cp config/aws-config.sample.json config/aws-config.json
+AWS_S3_ENABLED=true
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+AWS_REGION=
+AWS_BUCKET=
 ```
-
-Make sure that `AWS_S3=true` and `AWS_BUCKET` are set properly, and the aws-config.json exists.
 
 #### CouchDB
 
-To use CouchDB, you are going to need to copy the environment file
+To use CouchDB, ensure the following variables are loaded in your `.env`:
 
 ```
-cp config/.env.sample config/.env
+COUCH_DB_ENABLED=true
+COUCH_DB_PROTOCOL=
+COUCH_DB_HOST=
+COUCH_DB_USER=
+COUCH_DB_PASS=
 ```
 
-Make sure that `COUCH_DB=true` and the proper values for your instance are filled out.
+## Docker
 
-### Tools:
+Run the following command:
 
-- NestJS/Express web server
-- Puppeteer for headless chrome image rendering
-- Sharp for image resizing
-- CouchDB or AWS S3 for image store
+```
+docker run --rm -p 3000:3000 jasonraimondi/url-to-png
+```
 
-### Docker
+Navigate to `localhost:3000?url=https://google.com`. 
 
-If you run `docker-compose up` it should boot the project and spin it up on `localhost:3000`
+Try any of the following:
 
+```
+http://localhost:3000?url=https://google.com
+http://localhost:3000?url=https://google.com&forceReload=true
+http://localhost:3000?url=https://google.com&isFullPage=true
+http://localhost:3000?url=https://google.com&isMobile=true
+http://localhost:3000?url=https://google.com&width=400&height=400
+http://localhost:3000?url=https://google.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://google.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://google.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
+```
 
+On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)

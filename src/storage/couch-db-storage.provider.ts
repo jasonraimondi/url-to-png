@@ -1,16 +1,16 @@
-import * as nano from 'nano';
 import { Injectable } from '@nestjs/common';
-import { StorageInterface } from '../StorageInterface';
+import * as couchDBNano from 'nano';
+import { IImageStorage } from '../services/image-storage.service';
 
 @Injectable()
-export class CouchDBStorageProvider implements StorageInterface {
-  constructor(private readonly nano: nano.ServerScope) {}
+export class CouchDbStorageProvider implements IImageStorage {
+  constructor(private readonly couchDB: couchDBNano.ServerScope) {}
 
   get images() {
-    return this.nano.use('images');
+    return this.couchDB.use('images');
   }
 
-  async fetchImage(imageId: string): Promise<null | Buffer> {
+  public async fetchImage(imageId: string): Promise<null | Buffer> {
     try {
       return await this.images.attachment.get(imageId, 'urlto.png');
     } catch (err) {
@@ -18,7 +18,7 @@ export class CouchDBStorageProvider implements StorageInterface {
     }
   }
 
-  async storeImage(imageId: string, image): Promise<boolean> {
+  public async storeImage(imageId: string, image): Promise<boolean> {
     const images = this.images;
 
     try {

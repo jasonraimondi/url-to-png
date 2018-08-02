@@ -10,7 +10,7 @@
     "target": "es6",
     "sourceMap": true,
     "allowJs": true,
-    "outDir": "./dist/out-types",
+    "outDir": "./dist",
     "typeRoots": [
       "node_modules/@types"
     ],

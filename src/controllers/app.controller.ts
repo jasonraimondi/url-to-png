@@ -1,24 +1,22 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import * as md5 from 'md5';
 
-import { ConfigInterface, RenderImageService } from '../services/RenderImageService';
-import { BaseController } from './base.controller';
-import { imageDTO } from '../dtos/imageDTO';
-import { StorageService } from '../services/storage/StorageService';
+import { ConfigApi, IConfigAPI } from '../config.api';
+import { ImageRenderService } from '../services/image-render.service';
+import { ImageStorageService } from '../services/image-storage.service';
 
 @Controller()
-export class AppController extends BaseController {
+export class AppController {
   constructor(
-    private readonly storageService: StorageService,
-    private readonly renderImageService: RenderImageService
+    private readonly storageService: ImageStorageService,
+    private readonly renderImageService: ImageRenderService,
   ) {
-    super();
   }
 
   @Get()
-  async root(@Res() response, @Query() query: imageDTO) {
+  public async root(@Res() response, @Query() query: ConfigApi) {
     const errors = [];
-    const config: ConfigInterface = {};
+    const config: IConfigAPI = {};
     let forceReload = false;
 
     if (!query.url) {
@@ -75,13 +73,23 @@ export class AppController extends BaseController {
     return;
   }
 
-  private configToString(config: ConfigInterface) {
-    let string = '';
+  protected errorMessage(err: Error, response) {
+    return response.json({
+      name: err.name,
+      message: err.message,
+      stack: err.stack,
+    });
+  }
 
-    for (let i in config) {
-      string += `_${i}-${config[i]}`;
+  private configToString(configAPI: IConfigAPI) {
+    let configString = '';
+
+    for (const key in configAPI) {
+      if (configAPI.hasOwnProperty(key)) {
+        configString += `_${key}-${configAPI[key]}`;
+      }
     }
 
-    return string;
+    return configString;
   }
 }

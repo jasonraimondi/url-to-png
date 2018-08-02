@@ -1,9 +1,3 @@
-import { join } from 'path';
-
-const projectRoot = join(__dirname, '../');
-
-require('dotenv').config({ path: projectRoot + '/config/.env' });
-
 import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './app.module';
 
@@ -12,4 +6,4 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
-bootstrap();
+bootstrap().then().catch((err) => console.log(err));

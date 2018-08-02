@@ -1,15 +1,11 @@
 import * as S3 from 'aws-sdk/clients/s3';
 import { GetObjectRequest, PutObjectRequest } from 'aws-sdk/clients/s3';
-import { StorageInterface } from '../StorageInterface';
+import { IImageStorage } from '../services/image-storage.service';
 
-export class AmazonStorageProvider implements StorageInterface {
+export class AmazonS3StorageProvider implements IImageStorage {
   constructor(private readonly s3: S3, private readonly BUCKET_NAME: string) {}
 
-  private getImageId(imageId: string) {
-    return imageId + '.png';
-  }
-
-  async fetchImage(imageId: string) {
+  public async fetchImage(imageId: string) {
     const params: GetObjectRequest = { Bucket: this.BUCKET_NAME, Key: this.getImageId(imageId) };
     try {
       const response = await this.s3.getObject(params).promise();
@@ -19,7 +15,7 @@ export class AmazonStorageProvider implements StorageInterface {
     }
   }
 
-  async storeImage(imageId: string, image: Buffer) {
+  public async storeImage(imageId: string, image: Buffer) {
     try {
       const data: PutObjectRequest = {
         Key: this.getImageId(imageId),
@@ -31,5 +27,9 @@ export class AmazonStorageProvider implements StorageInterface {
     } catch (err) {
       return false;
     }
+  }
+
+  private getImageId(imageId: string) {
+    return imageId + '.png';
   }
 }
