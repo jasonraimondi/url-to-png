@@ -2,30 +2,14 @@
 
 A URL to PNG generator over HTTP with a fairly simple API accessed via query params passed to the servers single endpoint.
 
-- `url: string`
-    - **Required**
-    - Valid URL to be captured
-- `width: number`
-    - Default: `250`
-    - Width of output screenshot
-- `height: number`
-    - Default: `250`
-    - Height of output screenshot
-- `viewPortWidth: number`
-    - Default: `1080`
-    - Width of render viewport
-- `viewPortHeight: number`
-    - Default: `1080`
-    - Height of render viewport
-- `forceReload: boolean`
-    - Default: `false`
-    - Force cached image reload
-- `isMobile: boolean`
-    - Default: false
-    - Adds mobile flag to user agent
-- `isFullPage: boolean`
-    - Default: false
-    - Render full page instead of viewport crop
+- `url: string` - Valid URL to be captured - **Required**
+- `width: number` - Width of output screenshot - **Optional** - Default: `250`
+- `height: number` - Height of output screenshot - **Optional** - Default: `250`
+- `viewPortWidth: number` - Width of render viewport - **Optional** - Default: `1080`
+- `viewPortHeight: number` - Height of render viewport - **Optional** - Default: `1080`
+- `forceReload: boolean` - Force cached image reload - **Optional** - Default: `false`
+- `isMobile: boolean` - Adds mobile flag to user agent - **Optional** - Default: false
+- `isFullPage: boolean` - Render full page instead of viewport crop - **Optional** - Default: false
 
 ## How to Use:
 
