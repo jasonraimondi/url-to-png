@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { Options } from 'generic-pool';
-import nano = require('nano');
+import * as nano from 'nano';
+import { NavigationOptions } from 'puppeteer';
 
 import { AppController } from './controllers/app.controller';
 import { createPuppeteerPool } from './puppeteer-pool';
@@ -10,52 +11,88 @@ import { IImageStorage, ImageStorageService } from './services/image-storage.ser
 import { AmazonS3StorageProvider } from './storage/amazon-s3-storage.provider';
 import { CouchDbStorageProvider } from './storage/couch-db-storage.provider';
 import { StubStorageProvider } from './storage/stub-storage.provider';
+import { winstonLogger } from './winston-logger';
 
-const storageService = {
+const imageStorageService = {
   provide: 'ImageStorageService',
   async useFactory() {
     let imageStorage: IImageStorage;
 
-    if (process.env.AWS_ENABLED) {
-      AWS.config.accessKeyId = process.env.AWS_ACCESS_KEY;
-      AWS.config.secretAccessKey = process.env.AWS_SECRET_KEY;
-      AWS.config.region = process.env.AWS_REGION;
-      imageStorage = new AmazonS3StorageProvider(new AWS.S3(), process.env.AWS_BUCKET);
-    } else if (process.env.COUCH_DB_ENABLED) {
-      imageStorage = new CouchDbStorageProvider(nano('http://jason:couchdb@couchdb:5984'));
-    } else {
-      imageStorage = new StubStorageProvider();
+    switch (process.env.STORAGE_PROVIDER) {
+      case 's3':
+        AWS.config.accessKeyId = process.env.AWS_ACCESS_KEY;
+        AWS.config.secretAccessKey = process.env.AWS_SECRET_KEY;
+        AWS.config.region = process.env.AWS_REGION;
+        imageStorage = new AmazonS3StorageProvider(new AWS.S3(), process.env.AWS_BUCKET);
+        break;
+      case 'couchdb':
+        const protocol = process.env.COUCH_DB_PROTOCOL;
+        const user = process.env.COUCH_DB_USER;
+        const pass = process.env.COUCH_DB_PASS;
+        const host = process.env.COUCH_DB_HOST;
+        const port = process.env.COUCH_DB_PORT;
+        imageStorage = new CouchDbStorageProvider(
+          nano(`${protocol}://${user}:${pass}@${host}:${port}`),
+        );
+        break;
+      default:
+        imageStorage = new StubStorageProvider(winstonLogger);
     }
 
     return new ImageStorageService(imageStorage);
   },
 };
 
-const renderImageService = {
+const imageRenderService = {
   provide: 'ImageRenderService',
   async useFactory() {
+    const isValidInteger = (sample: any) => Number.isInteger(Number(sample));
     const opts: Options = {};
 
-    if (Number.isInteger(Number(process.env.POOLS_MAX))) {
+    if (isValidInteger(process.env.POOLS_MAX)) {
       opts.max = Number(process.env.POOLS_MAX);
     }
 
-    if (Number.isInteger(Number(process.env.POOLS_MIN))) {
+    if (isValidInteger(process.env.POOLS_MIN)) {
       opts.min = Number(process.env.POOLS_MIN);
     }
 
-    if (Number.isInteger(Number(process.env.POOLS_MAX_WAITING))) {
+    if (isValidInteger(process.env.POOLS_MAX_WAITING)) {
       opts.maxWaitingClients = Number(process.env.POOLS_MAX_WAITING);
     }
 
+    if (isValidInteger(process.env.POOLS_MAX)) {
+      opts.max = Number(process.env.POOLS_MAX);
+    }
+
+    const navigationOptions: NavigationOptions = {};
+    switch (process.env.PUPPETEER_WAIT_UNTIL) {
+      case 'load':
+      case 'domcontentloaded':
+      case 'networkidle0':
+      case 'networkidle2':
+        navigationOptions.waitUntil = process.env.PUPPETEER_WAIT_UNTIL;
+        break;
+    }
+    if (isValidInteger(process.env.PUPPETEER_TIMEOUT)) {
+      navigationOptions.timeout = Number(process.env.PUPPETEER_TIMEOUT);
+    }
+
     const puppeteerPool = createPuppeteerPool(opts);
-    return new ImageRenderService(puppeteerPool);
+    return new ImageRenderService(puppeteerPool, winstonLogger, navigationOptions);
+  },
+};
+
+const loggerService = {
+  provide: 'LoggerService',
+  useFactory() {
+    return winstonLogger;
   },
 };
 
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [renderImageService, storageService],
+  providers: [imageRenderService, imageStorageService, loggerService],
 })
 export class ApplicationModule {}

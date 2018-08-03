@@ -1,4 +1,4 @@
-export VERSION=0.9.1
+export VERSION=0.10.0
 export REPO=jasonraimondi/url-to-png
 export TAG=${REPO}:${VERSION}
 

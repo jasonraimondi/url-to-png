@@ -15,8 +15,6 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 
 ## How to Use:
 
-Well... I am a huge fan of docker. So we are going to use docker.
-
 #### A) Docker
 
 Run the following command:
@@ -40,7 +38,7 @@ npm run dev
 
 #### Up and Running?
 
-Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should get back an image capture of `https://google.com`. 
+Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should get back an image capture of `https://google.com`.
 
 Go ahead and try any of the following:
 
@@ -55,10 +53,17 @@ http://localhost:3000?url=https://www.jasonraimondi.com&viewPortHeight=400&viewP
 http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
 ```
 
+## Puppeteer Options
+
+`PUPPETEER_TIMEOUT` = Maximum navigation time in milliseconds, pass 0 to disable timeout.
+`PUPPETEER_WAIT_UNTIL` = When to consider navigation succeeded.
+
+Valid Options: load|domcontentloaded|networkidle0|networkidle2
+Default: domcontentloaded
+
 ## Image Storage / Cache
 
-NOTE: Currently you are only able to use **ONE** storage option at a time.
-NOTE 2: If you are running in Docker, you should skip the .env and load the environment variables into your container.
+NOTE: If you are running in Docker, you should skip the .env and load the environment variables into your container.
 
 You are going to need to copy the environment file to use any of the storage options. By default no images are cached.
 
@@ -68,10 +73,10 @@ cp .env.sample .env
 
 #### AWS S3
 
-To use Amazon S3, ensure the following variables are loaded in your `.env`:
+To use Amazon S3 set `STORAGE_PROVIDER=s3`, ensure the following variables are loaded in your `.env`:
 
 ```
-AWS_S3_ENABLED=true
+STORAGE_PROVIDER=s3
 AWS_ACCESS_KEY=
 AWS_SECRET_KEY=
 AWS_REGION=
@@ -80,10 +85,10 @@ AWS_BUCKET=
 
 #### CouchDB
 
-To use CouchDB, ensure the following variables are loaded in your `.env`:
+To use CouchDB set `STORAGE_PROVIDER=couchdb`, ensure the following variables are loaded in your `.env`:
 
 ```
-COUCH_DB_ENABLED=true
+STORAGE_PROVIDER=couchdb
 COUCH_DB_PROTOCOL=
 COUCH_DB_HOST=
 COUCH_DB_USER=

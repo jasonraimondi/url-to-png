@@ -1,10 +1,25 @@
 import { Pool } from 'generic-pool';
-import { Page } from 'puppeteer';
+import { Browser, NavigationOptions } from 'puppeteer';
 import * as sharp from 'sharp';
+
 import { IConfigAPI } from '../config.api';
+import { LoggerService } from './logger.service';
 
 export class ImageRenderService {
-  constructor(private readonly puppeteerPool: Pool<Page>) {}
+  private readonly GOTO_OPTIONS: NavigationOptions;
+
+  constructor(
+    private readonly puppeteerPool: Pool<Browser>,
+    private readonly logger: LoggerService,
+    private readonly navigationOptions: NavigationOptions,
+  ) {
+    this.GOTO_OPTIONS = {
+      waitUntil: 'domcontentloaded',
+      timeout: 10000,
+      ...navigationOptions,
+    };
+    this.logger.debug(`goto options ${JSON.stringify(this.GOTO_OPTIONS)}`);
+  }
 
   public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer | boolean> {
     config = {
@@ -18,11 +33,9 @@ export class ImageRenderService {
     };
 
     try {
-      const page = await this.puppeteerPool.acquire();
-      await page.goto(url, {
-        waitUntil: 'domcontentloaded',
-        timeout: 10000,
-      });
+      const browser = await this.puppeteerPool.acquire();
+      const page = await browser.newPage();
+      await page.goto(url, this.GOTO_OPTIONS);
       await page.setViewport({
         width: config.viewPortWidth,
         height: config.viewPortHeight,
@@ -32,15 +45,15 @@ export class ImageRenderService {
         fullPage: config.isFullPage,
       });
       image = await this.resize(image, config.width, config.height);
-      await this.puppeteerPool.release(page);
+      await this.puppeteerPool.release(browser);
       return image;
     } catch (err) {
-      console.log(err.message);
+      this.logger.debug(JSON.stringify(err));
       return false;
     }
   }
 
-  public async resize(image, width: number, height: number) {
+  private async resize(image, width: number, height: number) {
     return await sharp(image)
       .resize(width, height)
       .toBuffer();

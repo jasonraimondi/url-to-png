@@ -1,15 +1,17 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
-import * as md5 from 'md5';
+import * as validUrl from 'valid-url';
 
 import { ConfigApi, IConfigAPI } from '../config.api';
 import { ImageRenderService } from '../services/image-render.service';
 import { ImageStorageService } from '../services/image-storage.service';
+import { LoggerService } from '../services/logger.service';
 
 @Controller()
 export class AppController {
   constructor(
-    private readonly storageService: ImageStorageService,
-    private readonly renderImageService: ImageRenderService,
+    private readonly imageStorageService: ImageStorageService,
+    private readonly imageRenderService: ImageRenderService,
+    private readonly loggerService: LoggerService,
   ) {
   }
 
@@ -20,10 +22,16 @@ export class AppController {
     let forceReload = false;
 
     if (!query.url) {
-      errors.push('valid query is required');
+      errors.push('url is required');
+    }
+
+    if (!validUrl.isUri(query.url)) {
+      this.loggerService.verbose(`Invalid URL: (${query.url})`);
+      errors.push('url must be valid');
     }
 
     if (errors.length > 0) {
+      response.status(400);
       response.json(errors);
       return;
     }
@@ -50,22 +58,22 @@ export class AppController {
 
     const date = new Date();
     const dateString = date.toLocaleDateString().replace(/\//g, '-');
-    const imageName = query.url + '_' + dateString + this.configToString(config);
-    const imageId = md5(imageName);
+    const imageId = dateString + '.' + this.slugify(query.url) + this.configToString(config);
 
-    let imageBuffer: any = await this.storageService.fetchImage(imageId);
+    let imageBuffer: any = await this.imageStorageService.fetchImage(imageId);
 
     if (imageBuffer === null || forceReload) {
       try {
-        imageBuffer = await this.renderImageService.screenshot(query.url, config);
+        imageBuffer = await this.imageRenderService.screenshot(query.url, config);
       } catch (err) {
+        this.loggerService.debug(err.message);
         return this.errorMessage(err, response);
       }
 
       try {
-        await this.storageService.storeImage(imageId, imageBuffer);
+        await this.imageStorageService.storeImage(imageId, imageBuffer);
       } catch (err) {
-        console.log(err.message);
+        this.loggerService.debug(err.message);
       }
     }
 
@@ -74,6 +82,7 @@ export class AppController {
   }
 
   protected errorMessage(err: Error, response) {
+    response.status(500);
     return response.json({
       name: err.name,
       message: err.message,
@@ -91,5 +100,16 @@ export class AppController {
     }
 
     return configString;
+  }
+
+  private slugify(text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, ''); // Trim - from end of text
   }
 }

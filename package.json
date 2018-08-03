@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf dist/*",
-    "serve": "node  -r dotenv/config dist/main.js",
+    "serve": "node -r dotenv/config dist/main.js",
     "dev": "nodemon",
     "compile": "tsc",
     "build": "run-s clean compile",
@@ -30,9 +30,12 @@
     "puppeteer": "^1.6.2",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2",
-    "sharp": "^0.20.5"
+    "sharp": "^0.20.5",
+    "valid-url": "^1.0.9",
+    "winston": "^3.0.0"
   },
   "devDependencies": {
+    "@types/generic-pool": "^3.1.4",
     "@types/node": "^10.5.5",
     "@types/puppeteer": "^1.6.0",
     "cross-env": "^5.2.0",

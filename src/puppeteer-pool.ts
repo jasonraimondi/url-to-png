@@ -1,20 +1,15 @@
 import * as genericPool from 'generic-pool';
 import { Factory, Options } from 'generic-pool';
 import * as puppeteer from 'puppeteer';
-import {  Page } from 'puppeteer';
+import { Browser, Page } from 'puppeteer';
 
-const factory: Factory<Page> = {
-  async create() {
-    const browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-      ],
+const factory: Factory<Browser> = {
+  async create(): Promise<Browser> {
+    return await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-    return await browser.newPage();
   },
-  async destroy(page: Page) {
-    const browser = await page.browser();
+  async destroy(browser: Browser) {
     await browser.close();
   },
 };
@@ -26,5 +21,5 @@ export function createPuppeteerPool(opts: Options = {}) {
     maxWaitingClients: 50,
     ...opts,
   };
-  return genericPool.createPool<Page>(factory, opts);
+  return genericPool.createPool<Browser>(factory, opts);
 }
