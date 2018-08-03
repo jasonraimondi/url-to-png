@@ -55,11 +55,28 @@ http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true&isMobile
 
 ## Puppeteer Options
 
-`PUPPETEER_TIMEOUT` = Maximum navigation time in milliseconds, pass 0 to disable timeout.
-`PUPPETEER_WAIT_UNTIL` = When to consider navigation succeeded.
+Please see the Puppeteer API documentation [here](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options) for further knowledge.
 
-Valid Options: load|domcontentloaded|networkidle0|networkidle2
-Default: domcontentloaded
+```
+PUPPETEER_TIMEOUT=
+PUPPETEER_WAIT_UNTIL=
+```
+
+#### `PUPPETEER_TIMEOUT`
+
+The maximum navigation time in milliseconds, pass 0 to disable timeout. The default value is 10000
+
+#### `PUPPETEER_WAIT_UNTIL`
+
+When puppeteer to considers the navigation succeeded. The default value for this option is `domcontentloaded`
+
+Valid Options:
+
+- `load` - consider navigation to be finished when the load event is fired.
+- `domcontentloaded` - consider navigation to be finished when the DOMContentLoaded event is fired.
+- `networkidle0` - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
+- `networkidle2` - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
+
 
 ## Image Storage / Cache
 
