@@ -26,8 +26,11 @@ export class AppController {
     }
 
     if (!validUrl.isUri(query.url)) {
-      this.loggerService.verbose(`Invalid URL: (${query.url})`);
-      errors.push('url must be valid');
+      if (query.url !== undefined) {
+        this.loggerService.verbose(`Invalid URL: ( ${query.url} )`);
+      }
+
+      errors.push('url must be valid and include http');
     }
 
     if (errors.length > 0) {
