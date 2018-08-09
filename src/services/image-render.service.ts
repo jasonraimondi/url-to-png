@@ -23,14 +23,20 @@ export class ImageRenderService {
 
   public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer | boolean> {
     config = {
-      width: 250,
-      height: 250,
       viewPortWidth: 1080,
       viewPortHeight: 1080,
       isMobile: false,
       isFullPage: false,
       ...config,
     };
+
+    if (!config.width && !config.height) {
+      config.width = 250;
+
+      if (!config.isFullPage) {
+        config.height = 250;
+      }
+    }
 
     try {
       const browser = await this.puppeteerPool.acquire();

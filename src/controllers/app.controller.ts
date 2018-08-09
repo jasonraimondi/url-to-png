@@ -38,18 +38,38 @@ export class AppController {
 
     if (query.width) {
       config.width = Number(query.width);
+      if (config.width > 1920) {
+        config.width = 1920;
+      }
     }
 
     if (query.height) {
       config.height = Number(query.height);
+      if (config.height > 1920) {
+        config.width = 1920;
+      }
     }
 
     if (query.viewPortWidth) {
       config.viewPortWidth = Number(query.viewPortWidth);
+      if (config.viewPortWidth > 1920) {
+        config.width = 1920;
+      }
     }
 
     if (query.viewPortHeight) {
       config.viewPortHeight = Number(query.viewPortHeight);
+      if (config.viewPortHeight > 1920) {
+        config.width = 1920;
+      }
+    }
+
+    if (query.isFullPage) {
+      config.isFullPage = true;
+    }
+
+    if (query.isMobile) {
+      config.isMobile = true;
     }
 
     if (query.forceReload) {
