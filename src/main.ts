@@ -11,4 +11,6 @@ async function bootstrap() {
 
 bootstrap()
   .then()
-  .catch((err) => winstonLogger.error(JSON.stringify(err)));
+  .catch((err) => {
+    winstonLogger.error(JSON.stringify(err));
+  });

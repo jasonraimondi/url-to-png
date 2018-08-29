@@ -74,6 +74,7 @@ const imageRenderService = {
         navigationOptions.waitUntil = process.env.PUPPETEER_WAIT_UNTIL;
         break;
     }
+
     if (isValidInteger(process.env.PUPPETEER_TIMEOUT)) {
       navigationOptions.timeout = Number(process.env.PUPPETEER_TIMEOUT);
     }

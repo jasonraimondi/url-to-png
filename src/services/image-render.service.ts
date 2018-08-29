@@ -30,6 +30,8 @@ export class ImageRenderService {
       ...config,
     };
 
+    this.logger.debug(JSON.stringify(config));
+
     if (!config.width && !config.height) {
       config.width = 250;
 
