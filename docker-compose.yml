@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  urltopng:
+    image: jasonraimondi/url-to-png:0.11.0
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: debug
+      PUPPETEER_WAIT_UNTIL: networkidle2
