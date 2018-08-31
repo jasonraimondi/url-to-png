@@ -4,8 +4,13 @@ LABEL maintainer="Jason Raimondi <jason@raimondi.us>"
 
 USER root
 
-ADD app.tgz /app
 WORKDIR /app
+
+ADD src /app/src
+ADD package.json /app/
+ADD package-lock.json /app/
+ADD tsconfig.json /app/
+ADD tslint.json /app/
 
 RUN npm install -q --no-color --no-progress \
     && npm run build \
