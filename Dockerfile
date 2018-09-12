@@ -17,8 +17,6 @@ RUN npm install -q --no-color --no-progress \
     && npm prune --production \
     && chown -R pptruser:pptruser /app
 
-RUN chmod +x /usr/local/bin/dumb-init
-
 USER pptruser
 
 EXPOSE 3000

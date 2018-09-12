@@ -1,12 +1,6 @@
-export VERSION=0.10.2
+export VERSION=0.10.3
 export REPO=jasonraimondi/url-to-png
 export TAG=${REPO}:${VERSION}
-
-publish: package build push
-
-package:
-	rm -f app.tgz
-	tar -cz -f app.tgz -C . src package.json package-lock.json tsconfig.json tslint.json
 
 build:
 	docker build -t ${TAG} -t ${REPO} .
