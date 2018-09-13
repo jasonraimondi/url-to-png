@@ -1,4 +1,7 @@
-# URL to PNG
+<h1 align="center">
+  	<img height="100" src="https://res.cloudinary.com/jmondi/image/upload/v1536798191/jasonraimondi.com/url-to-img/url-to-png-logo.png" alt="URL to PNG logo" /> 
+  	<br /> URL to PNG
+</h1>
 
 Link: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)
 
@@ -111,3 +114,7 @@ COUCH_DB_HOST=
 COUCH_DB_USER=
 COUCH_DB_PASS=
 ```
+
+## Sources
+
+Logo from [https://www.hipsterlogogenerator.com/](https://www.hipsterlogogenerator.com/)
