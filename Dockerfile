@@ -84,7 +84,8 @@ COPY --chown=pptruser:pptruser tslint.json /app/
 
 RUN npm install -q --no-color --no-progress \
     && npm run build \
-    && npm prune --production
+    && npm prune --production \
+    && chown -R pptruser:pptruser /app
 
 EXPOSE 3000
 
