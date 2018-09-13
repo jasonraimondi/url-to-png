@@ -3,8 +3,6 @@
   	<br /> URL to PNG
 </h1>
 
-Link: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)
-
 A URL to PNG generator over HTTP with a fairly simple API accessed via query params passed to the servers single endpoint.
 
 - `url: string` - Valid URL to be captured - **Required**
@@ -117,4 +115,5 @@ COUCH_DB_PASS=
 
 ## Sources
 
+Upstream Repository: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)
 Logo from [https://www.hipsterlogogenerator.com/](https://www.hipsterlogogenerator.com/)
