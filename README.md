@@ -115,5 +115,5 @@ COUCH_DB_PASS=
 
 ## Sources
 
-Upstream Repository: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)
-Logo from [https://www.hipsterlogogenerator.com/](https://www.hipsterlogogenerator.com/)
+- Upstream Repository: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)
+- Logo from [https://www.hipsterlogogenerator.com/](https://www.hipsterlogogenerator.com/)
