@@ -1,5 +1,4 @@
 import { Controller, Get, Query, Res } from '@nestjs/common';
-import * as validUrl from 'valid-url';
 
 import { ConfigApi, IConfigAPI } from '../config.api';
 import { ImageRenderService } from '../services/image-render.service';
@@ -25,12 +24,13 @@ export class AppController {
       errors.push('url is required');
     }
 
-    if (!validUrl.isUri(query.url)) {
+    if (!this.isURL(query.url)) {
+      const message = `Invalid URL: ( ${query.url} )`;
       if (query.url !== undefined) {
-        this.loggerService.verbose(`Invalid URL: ( ${query.url} )`);
+        this.loggerService.verbose(message);
       }
 
-      errors.push('url must be valid and include http');
+      errors.push(message);
     }
 
     if (errors.length > 0) {
@@ -111,6 +111,15 @@ export class AppController {
       message: err.message,
       stack: err.stack,
     });
+  }
+
+  private isURL(unknown: string): boolean {
+    try {
+      new URL(unknown);
+      return true;
+    } catch (_) {
+      return false
+    }
   }
 
   private configToString(configAPI: IConfigAPI) {
