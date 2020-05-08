@@ -1,9 +1,9 @@
-FROM node:10-slim
+FROM node:12-slim
 
 LABEL maintainer="Jason Raimondi <jason@raimondi.us>"
 
 ENV DUMB_INIT_VERSION=1.2.2 \
-    PUPPETEER_VERSION=1.8.0 \
+    PUPPETEER_VERSION=3.0.4 \
     LANG="C.UTF-8"
 
 USER root
