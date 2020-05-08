@@ -6,19 +6,19 @@ import { IConfigAPI } from '../config.api';
 import { LoggerService } from './logger.service';
 
 export class ImageRenderService {
-  private readonly GOTO_OPTIONS: NavigationOptions;
+  private readonly NAV_OPTIONS: NavigationOptions;
 
   constructor(
     private readonly puppeteerPool: Pool<Browser>,
     private readonly logger: LoggerService,
     private readonly navigationOptions: NavigationOptions,
   ) {
-    this.GOTO_OPTIONS = {
+    this.NAV_OPTIONS = {
       waitUntil: 'domcontentloaded',
       timeout: 10000,
       ...navigationOptions,
     };
-    this.logger.debug(`goto options ${JSON.stringify(this.GOTO_OPTIONS)}`);
+    this.logger.debug(`navigation options ${JSON.stringify(this.NAV_OPTIONS)}`);
   }
 
   public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer | boolean> {
@@ -43,7 +43,7 @@ export class ImageRenderService {
     try {
       const browser = await this.puppeteerPool.acquire();
       const page = await browser.newPage();
-      await page.goto(url, this.GOTO_OPTIONS);
+      await page.goto(url, this.NAV_OPTIONS);
       await page.setViewport({
         width: config.viewPortWidth,
         height: config.viewPortHeight,
