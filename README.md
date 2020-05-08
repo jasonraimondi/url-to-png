@@ -43,7 +43,7 @@ npm run dev
 
 #### Up and Running?
 
-Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should get back an image capture of `https://google.com`.
+Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should get back an image capture of my website homepage.
 
 Go ahead and try any of the following:
 
