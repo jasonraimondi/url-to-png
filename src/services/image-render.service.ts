@@ -40,26 +40,27 @@ export class ImageRenderService {
       }
     }
 
+    const browser = await this.puppeteerPool.acquire();
+    const page = await browser.newPage();
+
+    let image: false | Buffer = false;
+
     try {
-      const browser = await this.puppeteerPool.acquire();
-      const page = await browser.newPage();
       await page.goto(url, this.NAV_OPTIONS);
       await page.setViewport({
         width: config.viewPortWidth,
         height: config.viewPortHeight,
         isMobile: config.isMobile,
       });
-      let image = await page.screenshot({
-        fullPage: config.isFullPage,
-      });
-      page.close(); // ignore the promise
+      image = await page.screenshot({ fullPage: config.isFullPage });
       image = await this.resize(image, config.width, config.height);
       await this.puppeteerPool.release(browser);
-      return image;
     } catch (err) {
       this.logger.debug(JSON.stringify(err));
-      return false;
+    } finally {
+      page.close().catch((e) => this.logger.error(e.message));
     }
+    return image;
   }
 
   private async resize(image, width: number, height: number) {
