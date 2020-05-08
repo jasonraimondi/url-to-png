@@ -52,6 +52,7 @@ export class ImageRenderService {
       let image = await page.screenshot({
         fullPage: config.isFullPage,
       });
+      page.close(); // ignore the promise
       image = await this.resize(image, config.width, config.height);
       await this.puppeteerPool.release(browser);
       return image;
