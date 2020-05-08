@@ -3,9 +3,10 @@
   	<br /> URL to PNG
 </h1>
 
-[![Automated](https://img.shields.io/docker/automated/jasonraimondi/url-to-png.svg)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
-[![Build](https://img.shields.io/docker/build/jasonraimondi/url-to-png.svg)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
-[![Image Size](https://img.shields.io/microbadger/image-size/jasonraimondi/url-to-png.svg)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
+[![Build](https://img.shields.io/docker/cloud/build/jasonraimondi/url-to-png?style=flat-square)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
+[![Image Size](https://img.shields.io/docker/image-size/jasonraimondi/url-to-png?style=flat-square)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
+[![Pulls](https://img.shields.io/docker/pulls/jasonraimondi/url-to-png?style=flat-square)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
+[![Version](https://img.shields.io/docker/v/jasonraimondi/url-to-png?style=flat-square)](https://hub.docker.com/r/jasonraimondi/url-to-png/)
 
 A URL to PNG generator over HTTP with a fairly simple API accessed via query params passed to the servers single endpoint.
 
