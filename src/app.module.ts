@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { Options } from 'generic-pool';
 import * as nano from 'nano';
-import { NavigationOptions } from 'puppeteer';
+import { WaitForOptions } from 'puppeteer';
 
 import { AppController } from './controllers/app.controller';
 import { createPuppeteerPool } from './puppeteer-pool';
@@ -65,7 +65,7 @@ const imageRenderService = {
       opts.max = Number(process.env.POOLS_MAX);
     }
 
-    const navigationOptions: NavigationOptions = {};
+    const navigationOptions: WaitForOptions = {};
     switch (process.env.PUPPETEER_WAIT_UNTIL) {
       case 'load':
       case 'domcontentloaded':
