@@ -1,9 +1,9 @@
-FROM node:12-slim
+FROM node:14-slim
 
 LABEL maintainer="Jason Raimondi <jason@raimondi.us>"
 
-ENV DUMB_INIT_VERSION=1.2.2 \
-    PUPPETEER_VERSION=3.0.4 \
+ENV DUMB_INIT_VERSION=1.2.5 \
+    PUPPETEER_VERSION=7.1.0 \
     LANG="C.UTF-8"
 
 USER root
@@ -59,7 +59,8 @@ RUN apt-get update \
             && rm -f dumb-init_*.deb \
     ) \
     && ( \
-        yarn global add puppeteer@${PUPPETEER_VERSION} \
+        npm install -g npm@7 \
+            && yarn global add puppeteer@${PUPPETEER_VERSION} \
             && yarn cache clean \
             && groupadd -r pptruser \
             && useradd -r -g pptruser -G audio,video pptruser \
@@ -82,7 +83,7 @@ COPY --chown=pptruser:pptruser package-lock.json /app/
 COPY --chown=pptruser:pptruser tsconfig.json /app/
 COPY --chown=pptruser:pptruser tslint.json /app/
 
-RUN npm install -q --no-color --no-progress \
+RUN npm ci -q --no-color --no-progress \
     && npm run build \
     && npm prune --production \
     && chown -R pptruser:pptruser /app

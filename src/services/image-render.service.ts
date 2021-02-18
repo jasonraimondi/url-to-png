@@ -1,17 +1,17 @@
 import { Pool } from 'generic-pool';
-import { Browser, NavigationOptions } from 'puppeteer';
+import { Browser, WaitForOptions } from 'puppeteer';
 import * as sharp from 'sharp';
 
 import { IConfigAPI } from '../config.api';
 import { LoggerService } from './logger.service';
 
 export class ImageRenderService {
-  private readonly NAV_OPTIONS: NavigationOptions;
+  private readonly NAV_OPTIONS: WaitForOptions;
 
   constructor(
     private readonly puppeteerPool: Pool<Browser>,
     private readonly logger: LoggerService,
-    private readonly navigationOptions: NavigationOptions,
+    private readonly navigationOptions: Partial<WaitForOptions>,
   ) {
     this.NAV_OPTIONS = {
       waitUntil: 'domcontentloaded',
@@ -43,7 +43,7 @@ export class ImageRenderService {
     const browser = await this.puppeteerPool.acquire();
     const page = await browser.newPage();
 
-    let image: false | Buffer = false;
+    let image: Buffer;
 
     try {
       await page.goto(url, this.NAV_OPTIONS);
@@ -52,18 +52,18 @@ export class ImageRenderService {
         height: config.viewPortHeight,
         isMobile: config.isMobile,
       });
-      image = await page.screenshot({ fullPage: config.isFullPage });
-      image = await this.resize(image, config.width, config.height);
+      const screenshot = await page.screenshot({ fullPage: config.isFullPage });
+      image = await this.resize(screenshot, config.width, config.height);
       await this.puppeteerPool.release(browser);
     } catch (err) {
       this.logger.debug(JSON.stringify(err));
     } finally {
       page.close().catch((e) => this.logger.error(e.message));
     }
-    return image;
+    return image ?? false;
   }
 
-  private async resize(image, width: number, height: number) {
+  private async resize(image, width: number, height: number): Promise<Buffer> {
     return await sharp(image)
       .resize(width, height)
       .toBuffer();
