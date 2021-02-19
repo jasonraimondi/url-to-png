@@ -1,11 +1,10 @@
 import * as genericPool from 'generic-pool';
 import { Factory, Options } from 'generic-pool';
-import * as puppeteer from 'puppeteer';
-import { Browser, Page } from 'puppeteer';
+import { chromium, Browser } from 'playwright';
 
 const factory: Factory<Browser> = {
   async create(): Promise<Browser> {
-    return await puppeteer.launch({
+    return await chromium.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
   },
@@ -19,6 +18,7 @@ export function createPuppeteerPool(opts: Options = {}) {
     max: 10,
     min: 2,
     maxWaitingClients: 50,
+    idleTimeoutMillis: 15000,
     ...opts,
   };
   return genericPool.createPool<Browser>(factory, opts);
