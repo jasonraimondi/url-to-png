@@ -1,21 +1,29 @@
-import * as rateLimit from 'express-rate-limit';
-import * as helmet from 'helmet';
-
+import helmet from 'fastify-helmet';
+import rateLimit from 'fastify-rate-limit';
 import { NestFactory } from '@nestjs/core';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+
 import { ApplicationModule } from './app.module';
 import { winstonLogger } from './winston-logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApplicationModule, {
-    logger: winstonLogger,
-  });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    ApplicationModule,
+    new FastifyAdapter(),
+    {
+      logger: winstonLogger,
+    }
+  );
+
   app.enableShutdownHooks();
-  app.use(rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-  }));
-  app.use(helmet());
-  await app.listen(3000);
+
+  await app.register(rateLimit, { max: 100, timeWindow: '1 minute' });
+  await app.register(helmet, { contentSecurityPolicy: false });
+
+  await app.listen(3000, '0.0.0.0');
 }
 
 bootstrap()
