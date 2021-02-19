@@ -100,7 +100,7 @@ export class AppController {
       }
     }
 
-    response.set({ 'Content-Type': 'image/png' }).send(imageBuffer);
+    response.header('Content-Type', 'image/png').send(imageBuffer);
     return;
   }
 
