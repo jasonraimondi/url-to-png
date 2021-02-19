@@ -59,30 +59,28 @@ http://localhost:3000?url=https://www.jasonraimondi.com&viewPortHeight=400&viewP
 http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
 ```
 
-## Puppeteer Options
+## Playwright Options
 
-Please see the Puppeteer API documentation [here](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagegotourl-options) for further knowledge.
+Please see the Playwright API documentation [here](https://playwright.dev/docs/api/class-page#pagegotourl-options) for further knowledge.
 
 ```
-PUPPETEER_TIMEOUT=
-PUPPETEER_WAIT_UNTIL=
+BROWSER_TIMEOUT=
+BROWSER_WAIT_UNTIL=
 ```
 
-#### `PUPPETEER_TIMEOUT`
+#### `BROWSER_TIMEOUT`
 
 The maximum navigation time in milliseconds, pass 0 to disable timeout. The default value is 10000
 
-#### `PUPPETEER_WAIT_UNTIL`
+#### `BROWSER_WAIT_UNTIL`
 
-When puppeteer to considers the navigation succeeded. The default value for this option is `domcontentloaded`
+When playwright to considers the navigation succeeded. The default value for this option is `domcontentloaded`
 
 Valid Options:
 
-- `load` - consider navigation to be finished when the load event is fired.
-- `domcontentloaded` - consider navigation to be finished when the DOMContentLoaded event is fired.
-- `networkidle0` - consider navigation to be finished when there are no more than 0 network connections for at least 500 ms.
-- `networkidle2` - consider navigation to be finished when there are no more than 2 network connections for at least 500 ms.
-
+- `'load'` - consider operation to be finished when the `load` event is fired.
+- `'domcontentloaded'` - consider operation to be finished when the `DOMContentLoaded` event is fired.
+- `'networkidle'` - consider operation to be finished when there are no network connections for at least `500` ms.
 
 ## Image Storage / Cache
 
