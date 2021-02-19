@@ -21,6 +21,7 @@ RUN npm run build
 
 
 FROM baserepo
+ENV DOCKER=1
 COPY --from=builder /dumb-init_*.deb /
 RUN dpkg -i /dumb-init_*.deb \
     && rm -f /dumb-init_*.deb
