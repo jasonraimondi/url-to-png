@@ -13,7 +13,7 @@ const factory: Factory<Browser> = {
   },
 };
 
-export function createPuppeteerPool(opts: Options = {}) {
+export function createBrowserPool(opts: Options = {}) {
   opts = {
     max: 10,
     min: 2,

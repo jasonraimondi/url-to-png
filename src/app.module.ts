@@ -4,7 +4,7 @@ import { Options } from 'generic-pool';
 import * as nano from 'nano';
 
 import { AppController } from './controllers/app.controller';
-import { createPuppeteerPool } from './puppeteer-pool';
+import { createBrowserPool } from './browser-pool';
 import { ImageRenderService, WaitForOptions } from "./services/image-render.service";
 import { IImageStorage, ImageStorageService } from './services/image-storage.service';
 import { AmazonS3StorageProvider } from './storage/amazon-s3-storage.provider';
@@ -65,20 +65,20 @@ const imageRenderService = {
     }
 
     const navigationOptions: Partial<WaitForOptions> = {};
-    switch (process.env.PUPPETEER_WAIT_UNTIL) {
+    switch (process.env.BROWSER_WAIT_UNTIL) {
       case 'load':
       case 'domcontentloaded':
       case 'networkidle':
-        navigationOptions.waitUntil = process.env.PUPPETEER_WAIT_UNTIL;
+        navigationOptions.waitUntil = process.env.BROWSER_WAIT_UNTIL;
         break;
     }
 
-    if (isValidInteger(process.env.PUPPETEER_TIMEOUT)) {
-      navigationOptions.timeout = Number(process.env.PUPPETEER_TIMEOUT);
+    if (isValidInteger(process.env.BROWSER_TIMEOUT)) {
+      navigationOptions.timeout = Number(process.env.BROWSER_TIMEOUT);
     }
 
-    const puppeteerPool = createPuppeteerPool(opts);
-    return new ImageRenderService(puppeteerPool, winstonLogger, navigationOptions);
+    const browserPool = createBrowserPool(opts);
+    return new ImageRenderService(browserPool, winstonLogger, navigationOptions);
   },
 };
 
