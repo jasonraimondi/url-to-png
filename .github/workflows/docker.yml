@@ -26,7 +26,7 @@ jobs:
             v{{version}}
             v{{major}}.{{minor}}
             v{{major}}
-          tag-sha: true
+#          tag-sha: true
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to DockerHub
