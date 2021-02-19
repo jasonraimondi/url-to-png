@@ -1,24 +1,37 @@
+import { Injectable, OnApplicationShutdown } from '@nestjs/common';
 import { Pool } from 'generic-pool';
-import { Browser, WaitForOptions } from 'puppeteer';
+import { Browser } from 'playwright';
 import * as sharp from 'sharp';
 
 import { IConfigAPI } from '../config.api';
 import { LoggerService } from './logger.service';
 
-export class ImageRenderService {
+export type WaitForOptions = {
+  timeout: number;
+  waitUntil: 'load'|'domcontentloaded'|'networkidle';
+}
+
+@Injectable()
+export class ImageRenderService implements OnApplicationShutdown {
   private readonly NAV_OPTIONS: WaitForOptions;
 
   constructor(
-    private readonly puppeteerPool: Pool<Browser>,
+    private readonly browserPool: Pool<Browser>,
     private readonly logger: LoggerService,
     private readonly navigationOptions: Partial<WaitForOptions>,
   ) {
     this.NAV_OPTIONS = {
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'networkidle',
       timeout: 10000,
       ...navigationOptions,
     };
     this.logger.debug(`navigation options ${JSON.stringify(this.NAV_OPTIONS)}`);
+  }
+
+  async onApplicationShutdown(signal: string) {
+    this.logger.info(`received signal ${signal}, draining browserPool`);
+    await this.browserPool.drain();
+    await this.browserPool.clear();
   }
 
   public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer | boolean> {
@@ -40,26 +53,28 @@ export class ImageRenderService {
       }
     }
 
-    const browser = await this.puppeteerPool.acquire();
-    const page = await browser.newPage();
+    const browser = await this.browserPool.acquire();
+    const page = await browser.newPage({
+      viewport: {
+        width: config.viewPortWidth,
+        height: config.viewPortHeight,
+      },
+      isMobile: config.isMobile,
+    });
 
     let image: Buffer;
 
     try {
       await page.goto(url, this.NAV_OPTIONS);
-      await page.setViewport({
-        width: config.viewPortWidth,
-        height: config.viewPortHeight,
-        isMobile: config.isMobile,
-      });
       const screenshot = await page.screenshot({ fullPage: config.isFullPage });
       image = await this.resize(screenshot, config.width, config.height);
-      await this.puppeteerPool.release(browser);
+      await this.browserPool.release(browser);
     } catch (err) {
       this.logger.debug(JSON.stringify(err));
     } finally {
       page.close().catch((e) => this.logger.error(e.message));
     }
+
     return image ?? false;
   }
 

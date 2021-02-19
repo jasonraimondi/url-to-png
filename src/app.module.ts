@@ -2,11 +2,10 @@ import { Module } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { Options } from 'generic-pool';
 import * as nano from 'nano';
-import { WaitForOptions } from 'puppeteer';
 
 import { AppController } from './controllers/app.controller';
 import { createPuppeteerPool } from './puppeteer-pool';
-import { ImageRenderService } from './services/image-render.service';
+import { ImageRenderService, WaitForOptions } from "./services/image-render.service";
 import { IImageStorage, ImageStorageService } from './services/image-storage.service';
 import { AmazonS3StorageProvider } from './storage/amazon-s3-storage.provider';
 import { CouchDbStorageProvider } from './storage/couch-db-storage.provider';
@@ -65,12 +64,11 @@ const imageRenderService = {
       opts.max = Number(process.env.POOLS_MAX);
     }
 
-    const navigationOptions: WaitForOptions = {};
+    const navigationOptions: Partial<WaitForOptions> = {};
     switch (process.env.PUPPETEER_WAIT_UNTIL) {
       case 'load':
       case 'domcontentloaded':
-      case 'networkidle0':
-      case 'networkidle2':
+      case 'networkidle':
         navigationOptions.waitUntil = process.env.PUPPETEER_WAIT_UNTIL;
         break;
     }
