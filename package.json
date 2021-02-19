@@ -1,5 +1,6 @@
 {
   "name": "@jmondi/url-to-png",
+  "version": "0.12.3",
   "description": "URL to PNG Server",
   "private": true,
   "scripts": {
