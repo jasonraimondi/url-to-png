@@ -7,4 +7,4 @@ services:
       - 3000:3000
     environment:
       NODE_ENV: debug
-      BROWSER_WAIT_UNTIL: networkidle2
+      BROWSER_WAIT_UNTIL: networkidle
