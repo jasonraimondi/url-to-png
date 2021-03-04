@@ -62,6 +62,18 @@ http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortW
 http://localhost:3000?url=https://jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
 ```
 
+## System Requirements
+
+The following is cut from the Playwright documentation, please view the [official system requirement documentation](https://playwright.dev/docs/1.3.0/intro/#system-requirements) for the most up to date requirements guide.
+
+Playwright requires Node.js version 10.15 or above. The browser binaries for Chromium, Firefox and WebKit work across the 3 platforms (Windows, macOS, Linux):
+
+* **Windows**: Works with Windows and Windows Subsystem for Linux (WSL).
+* **macOS**: Requires 10.14 or above.
+* **Linux**: Depending on your Linux distribution, you might need to install additional dependencies to run the browsers. 
+  * **Firefox** requires Ubuntu 18.04+
+  * For **Ubuntu 18.04**, the additional dependencies are defined in the [playwright Docker image](https://github.com/microsoft/playwright/blob/master/utils/docker/Dockerfile.bionic), which is based on Ubuntu.
+
 ## Playwright Options
 
 Please see the Playwright API documentation [here](https://playwright.dev/docs/api/class-page#pagegotourl-options) for further knowledge.
