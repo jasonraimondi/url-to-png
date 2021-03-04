@@ -83,6 +83,10 @@ export class AppController {
       forceReload = true;
     }
 
+    if (query.deviceScaleFactor) {
+      config.deviceScaleFactor = Number(query.deviceScaleFactor);
+    }
+
     const date = new Date();
     const dateString = date.toLocaleDateString().replace(/\//g, '-');
     const imageId = dateString + '.' + this.slugify(query.url) + this.configToString(config);
