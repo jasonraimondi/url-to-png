@@ -12,7 +12,7 @@ export class CouchDbStorageProvider implements IImageStorage {
     return this.couchDB.use('images');
   }
 
-  public async fetchImage(imageId: string): Promise<null | Buffer> {
+  public async fetchImage(imageId: string): Promise<undefined | Buffer> {
     imageId = md5(imageId);
     try {
       return await this.images.attachment.get(imageId, 'urlto.png');

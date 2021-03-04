@@ -9,9 +9,9 @@ export class AmazonS3StorageProvider implements IImageStorage {
     const params: GetObjectRequest = { Bucket: this.BUCKET_NAME, Key: this.getImageId(imageId) };
     try {
       const response = await this.s3.getObject(params).promise();
-      return response.Body;
+      return response.Body as Buffer;
     } catch {
-      return null;
+      return;
     }
   }
 

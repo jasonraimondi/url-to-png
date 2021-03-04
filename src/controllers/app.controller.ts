@@ -87,11 +87,14 @@ export class AppController {
     const dateString = date.toLocaleDateString().replace(/\//g, '-');
     const imageId = dateString + '.' + this.slugify(query.url) + this.configToString(config);
 
-    let imageBuffer: any = await this.imageStorageService.fetchImage(imageId);
+    let imageBuffer: Buffer|undefined = await this.imageStorageService.fetchImage(imageId);
 
-    if (imageBuffer === null || forceReload) {
+    if (!imageBuffer || forceReload) {
       try {
-        imageBuffer = await this.imageRenderService.screenshot(query.url, config);
+        const { image, status } = await this.imageRenderService.screenshot(query.url, config);
+        imageBuffer = image;
+        this.loggerService.debug(`Status ${status}`)
+        response.status(status);
       } catch (err) {
         this.loggerService.debug(err.message);
         return this.errorMessage(err, response);

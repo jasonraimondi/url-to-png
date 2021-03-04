@@ -34,7 +34,7 @@ export class ImageRenderService implements OnApplicationShutdown {
     await this.browserPool.clear();
   }
 
-  public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer | boolean> {
+  public async screenshot(url: string, config: IConfigAPI = {}): Promise<{ image?: Buffer; status: number }> {
     config = {
       viewPortWidth: 1080,
       viewPortHeight: 1080,
@@ -65,19 +65,24 @@ export class ImageRenderService implements OnApplicationShutdown {
     });
 
     let image: Buffer;
+    let status = 200;
 
     try {
-      await page.goto(url, this.NAV_OPTIONS);
+      const response = await page.goto(url, this.NAV_OPTIONS);
+      this.logger.debug(`response status code ${response.status()} ${response.statusText()}`)
+      if (!response.ok()) status = response.status();
       const screenshot = await page.screenshot({ fullPage: config.isFullPage });
       image = await this.resize(screenshot, config.width, config.height);
       await this.browserPool.release(browser);
     } catch (err) {
+      this.logger.debug(err.message);
       this.logger.debug(JSON.stringify(err));
     } finally {
       page.close().catch((e) => this.logger.error(e.message));
     }
 
-    return image ?? false;
+
+    return { image, status };
   }
 
   private async resize(image, width: number, height: number): Promise<Buffer> {
