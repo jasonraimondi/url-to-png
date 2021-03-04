@@ -40,6 +40,7 @@ export class ImageRenderService implements OnApplicationShutdown {
       viewPortHeight: 1080,
       isMobile: false,
       isFullPage: false,
+      isDarkMode: false,
       ...config,
     };
 
@@ -60,6 +61,7 @@ export class ImageRenderService implements OnApplicationShutdown {
         height: config.viewPortHeight,
       },
       isMobile: config.isMobile,
+      colorScheme: config.isDarkMode ? 'dark' : 'light',
     });
 
     let image: Buffer;

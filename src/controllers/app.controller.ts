@@ -75,6 +75,10 @@ export class AppController {
       config.isMobile = true;
     }
 
+    if (query.isDarkMode) {
+      config.isDarkMode = true;
+    }
+
     if (query.forceReload) {
       forceReload = true;
     }
