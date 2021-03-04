@@ -6,6 +6,7 @@ export interface IConfigAPI {
   isMobile?: boolean;
   isFullPage?: boolean;
   isDarkMode?: boolean;
+  deviceScaleFactor?: number;
 }
 
 export class ConfigApi implements IConfigAPI {
@@ -18,4 +19,5 @@ export class ConfigApi implements IConfigAPI {
   public readonly isMobile?: boolean;
   public readonly isFullPage?: boolean;
   public readonly isDarkMode?: boolean;
+  public readonly deviceScaleFactor?: number;
 }

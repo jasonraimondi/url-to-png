@@ -41,6 +41,7 @@ export class ImageRenderService implements OnApplicationShutdown {
       isMobile: false,
       isFullPage: false,
       isDarkMode: false,
+      deviceScaleFactor: 1,
       ...config,
     };
 
@@ -62,6 +63,7 @@ export class ImageRenderService implements OnApplicationShutdown {
       },
       isMobile: config.isMobile,
       colorScheme: config.isDarkMode ? 'dark' : 'light',
+      deviceScaleFactor: config.deviceScaleFactor,
     });
 
     let image: Buffer;
