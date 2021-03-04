@@ -19,6 +19,7 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 - `forceReload: boolean` - Force cached image reload - **Optional** - Default: `false`
 - `isMobile: boolean` - Adds mobile flag to user agent - **Optional** - Default: `false
 - `isFullPage: boolean` - Render full page instead of viewport crop - **Optional** - Default: `false`
+- `isDarkMode: boolean` - Prefer color scheme dark - **Optional** - Default: `false`
 
 ## How to Use:
 
@@ -50,14 +51,15 @@ Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should ge
 Go ahead and try any of the following:
 
 ```
-http://localhost:3000?url=https://www.jasonraimondi.com
-http://localhost:3000?url=https://www.jasonraimondi.com&forceReload=true
-http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true
-http://localhost:3000?url=https://www.jasonraimondi.com&isMobile=true
-http://localhost:3000?url=https://www.jasonraimondi.com&width=400&height=400
-http://localhost:3000?url=https://www.jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://www.jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://www.jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://jasonraimondi.com
+http://localhost:3000?url=https://jasonraimondi.com&forceReload=true
+http://localhost:3000?url=https://jasonraimondi.com&isFullPage=true
+http://localhost:3000?url=https://jasonraimondi.com&isMobile=true
+http://localhost:3000?url=https://jasonraimondi.com&isDarkMode=true
+http://localhost:3000?url=https://jasonraimondi.com&width=400&height=400
+http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
 ```
 
 ## Playwright Options

@@ -5,6 +5,7 @@ export interface IConfigAPI {
   viewPortHeight?: number;
   isMobile?: boolean;
   isFullPage?: boolean;
+  isDarkMode?: boolean;
 }
 
 export class ConfigApi implements IConfigAPI {
@@ -16,4 +17,5 @@ export class ConfigApi implements IConfigAPI {
   public readonly viewPortWidth?: number;
   public readonly isMobile?: boolean;
   public readonly isFullPage?: boolean;
+  public readonly isDarkMode?: boolean;
 }
