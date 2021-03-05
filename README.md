@@ -133,6 +133,12 @@ COUCH_DB_USER=
 COUCH_DB_PASS=
 ```
 
+## ALLOW_LIST
+
+```
+ALLOW_LIST=jasonraimondi.com,github.com
+```
+
 ## Sources
 
 - Upstream Repository: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)
