@@ -15,8 +15,12 @@ export class AllowListMiddleware implements NestMiddleware {
 
     use(req: Request, res: Response, next: NextFunction) {
         // skip `/?`
-        const params = new URLSearchParams(req.url.substr(1))
-        const requestURL = params.get('url')
+        const splitedURL = req.url.split('?')
+        if (splitedURL.length !== 2) {
+            throw new HttpException(`Invalid URL: ( ${req.url} )`, HttpStatus.BAD_REQUEST);
+        }
+
+        const requestURL = (new URLSearchParams(splitedURL[1])).get('url')
         if (!requestURL) {
             throw new HttpException('url is required', HttpStatus.BAD_REQUEST);
         }
