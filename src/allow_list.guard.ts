@@ -1,5 +1,5 @@
-import { CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { LoggerService } from './services/logger.service';
+import { CanActivate, ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { LoggerService } from "./services/logger.service";
 
 export class AllowListGuard implements CanActivate {
   private readonly allowedHosts: string[];
@@ -17,9 +17,9 @@ export class AllowListGuard implements CanActivate {
 
     let url: URL;
     try {
-      url = new URL(req.query.url)
+      url = new URL(req.query.url);
     } catch (e) {
-      throw new UnauthorizedException('invalid url requested');
+      throw new UnauthorizedException("invalid url requested");
     }
 
     const isValidDomain = this.allowedHosts.includes(url.host);
@@ -29,7 +29,7 @@ export class AllowListGuard implements CanActivate {
     this.logger.debug(`allowed hosts: ${this.allowedHosts.toString()}`);
 
     if (!isValidDomain) {
-      throw new UnauthorizedException('invalid url requested');
+      throw new UnauthorizedException("invalid url requested");
     }
 
     return true;
@@ -37,11 +37,12 @@ export class AllowListGuard implements CanActivate {
 
   formatAllowList(allowList?: string) {
     if (allowList === undefined) return;
-    return allowList.split(',')
-      .map(url => url.trim())
-      .map(url => url.replace(/https?:\/\//g, ''))
-      .map(url => `http://${url}`)
-      .map(url => new URL(url))
-      .map(url => url.host)
+    return allowList
+      .split(",")
+      .map((url) => url.trim())
+      .map((url) => url.replace(/https?:\/\//g, ""))
+      .map((url) => `http://${url}`)
+      .map((url) => new URL(url))
+      .map((url) => url.host);
   }
 }

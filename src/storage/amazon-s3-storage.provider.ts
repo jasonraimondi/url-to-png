@@ -1,6 +1,6 @@
-import * as S3 from 'aws-sdk/clients/s3';
-import { GetObjectRequest, PutObjectRequest } from 'aws-sdk/clients/s3';
-import { IImageStorage } from '../services/image-storage.service';
+import * as S3 from "aws-sdk/clients/s3";
+import { GetObjectRequest, PutObjectRequest } from "aws-sdk/clients/s3";
+import { IImageStorage } from "../services/image-storage.service";
 
 export class AmazonS3StorageProvider implements IImageStorage {
   constructor(private readonly s3: S3, private readonly BUCKET_NAME: string) {}
@@ -30,6 +30,6 @@ export class AmazonS3StorageProvider implements IImageStorage {
   }
 
   private getImageId(imageId: string) {
-    return imageId + '.png';
+    return imageId + ".png";
   }
 }

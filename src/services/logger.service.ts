@@ -1,12 +1,12 @@
-import { LoggerService as ILoggerService } from '@nestjs/common';
-import { Logger } from 'winston';
+import { LoggerService as ILoggerService } from "@nestjs/common";
+import { Logger } from "winston";
 
 export class LoggerService implements ILoggerService {
   constructor(private readonly logger: Logger) {}
 
   public log(message: string) {
     return this.logger.log({
-      level: 'info',
+      level: "info",
       message,
     });
   }

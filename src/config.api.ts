@@ -1,4 +1,4 @@
-import { IsBooleanString, IsNumberString, IsOptional, IsUrl } from 'class-validator';
+import { IsBooleanString, IsNumberString, IsOptional, IsUrl } from "class-validator";
 
 export interface IConfigAPI {
   width?: number;

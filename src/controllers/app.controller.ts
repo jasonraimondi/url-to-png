@@ -1,9 +1,9 @@
-import { Controller, Get, HttpException, HttpStatus, Query, Res } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Query, Res } from "@nestjs/common";
 
-import { ConfigApi, IConfigAPI } from '../config.api';
-import { ImageRenderService } from '../services/image-render.service';
-import { ImageStorageService } from '../services/image-storage.service';
-import { LoggerService } from '../services/logger.service';
+import { ConfigApi, IConfigAPI } from "../config.api";
+import { ImageRenderService } from "../services/image-render.service";
+import { ImageStorageService } from "../services/image-storage.service";
+import { LoggerService } from "../services/logger.service";
 
 @Controller()
 export class AppController {
@@ -11,8 +11,7 @@ export class AppController {
     private readonly imageStorageService: ImageStorageService,
     private readonly imageRenderService: ImageRenderService,
     private readonly loggerService: LoggerService,
-  ) {
-  }
+  ) {}
 
   @Get()
   public async root(@Res() response, @Query() query: ConfigApi) {
@@ -68,8 +67,8 @@ export class AppController {
     }
 
     const date = new Date();
-    const dateString = date.toLocaleDateString().replace(/\//g, '-');
-    const imageId = dateString + '.' + this.slugify(query.url) + this.configToString(config);
+    const dateString = date.toLocaleDateString().replace(/\//g, "-");
+    const imageId = dateString + "." + this.slugify(query.url) + this.configToString(config);
 
     let imageBuffer: any = await this.imageStorageService.fetchImage(imageId);
 
@@ -88,20 +87,23 @@ export class AppController {
       }
     }
 
-    response.header('Content-Type', 'image/png').send(imageBuffer);
+    response.header("Content-Type", "image/png").send(imageBuffer);
     return;
   }
 
   protected errorMessage(err: Error, response) {
-    throw new HttpException({
-      name: err.name,
-      message: err.message,
-      stack: err.stack,
-    }, HttpStatus.INTERNAL_SERVER_ERROR)
+    throw new HttpException(
+      {
+        name: err.name,
+        message: err.message,
+        stack: err.stack,
+      },
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 
   private configToString(configAPI: IConfigAPI) {
-    let configString = '';
+    let configString = "";
 
     for (const key in configAPI) {
       if (configAPI.hasOwnProperty(key)) {
@@ -116,10 +118,10 @@ export class AppController {
     return text
       .toString()
       .toLowerCase()
-      .replace(/\s+/g, '-') // Replace spaces with -
-      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-      .replace(/\-\-+/g, '-') // Replace multiple - with single -
-      .replace(/^-+/, '') // Trim - from start of text
-      .replace(/-+$/, ''); // Trim - from end of text
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text
   }
 }

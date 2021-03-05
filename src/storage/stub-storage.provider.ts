@@ -1,5 +1,5 @@
-import { IImageStorage } from '../services/image-storage.service';
-import { LoggerService } from '../services/logger.service';
+import { IImageStorage } from "../services/image-storage.service";
+import { LoggerService } from "../services/logger.service";
 
 export class StubStorageProvider implements IImageStorage {
   constructor(private readonly logger: LoggerService) {}

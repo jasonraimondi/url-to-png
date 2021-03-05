@@ -1,11 +1,11 @@
-import * as genericPool from 'generic-pool';
-import { Factory, Options } from 'generic-pool';
-import { chromium, Browser } from 'playwright';
+import * as genericPool from "generic-pool";
+import { Factory, Options } from "generic-pool";
+import { chromium, Browser } from "playwright";
 
 const factory: Factory<Browser> = {
   async create(): Promise<Browser> {
     return await chromium.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
   },
   async destroy(browser: Browser) {

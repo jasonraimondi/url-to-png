@@ -1,15 +1,15 @@
-import { Injectable, OnApplicationShutdown } from '@nestjs/common';
-import { Pool } from 'generic-pool';
-import { Browser } from 'playwright';
-import * as sharp from 'sharp';
+import { Injectable, OnApplicationShutdown } from "@nestjs/common";
+import { Pool } from "generic-pool";
+import { Browser } from "playwright";
+import * as sharp from "sharp";
 
-import { IConfigAPI } from '../config.api';
-import { LoggerService } from './logger.service';
+import { IConfigAPI } from "../config.api";
+import { LoggerService } from "./logger.service";
 
 export type WaitForOptions = {
   timeout: number;
-  waitUntil: 'load'|'domcontentloaded'|'networkidle';
-}
+  waitUntil: "load" | "domcontentloaded" | "networkidle";
+};
 
 @Injectable()
 export class ImageRenderService implements OnApplicationShutdown {
@@ -21,7 +21,7 @@ export class ImageRenderService implements OnApplicationShutdown {
     private readonly navigationOptions: Partial<WaitForOptions>,
   ) {
     this.NAV_OPTIONS = {
-      waitUntil: 'networkidle',
+      waitUntil: "networkidle",
       timeout: 10000,
       ...navigationOptions,
     };
@@ -62,7 +62,7 @@ export class ImageRenderService implements OnApplicationShutdown {
         height: config.viewPortHeight,
       },
       isMobile: config.isMobile,
-      colorScheme: config.isDarkMode ? 'dark' : 'light',
+      colorScheme: config.isDarkMode ? "dark" : "light",
       deviceScaleFactor: config.deviceScaleFactor,
     });
 
@@ -83,8 +83,6 @@ export class ImageRenderService implements OnApplicationShutdown {
   }
 
   private async resize(image, width: number, height: number): Promise<Buffer> {
-    return await sharp(image)
-      .resize(width, height)
-      .toBuffer();
+    return await sharp(image).resize(width, height).toBuffer();
   }
 }

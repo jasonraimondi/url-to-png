@@ -1,42 +1,40 @@
-import { Module } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
-import { Options } from 'generic-pool';
-import * as nano from 'nano';
+import { Module } from "@nestjs/common";
+import * as AWS from "aws-sdk";
+import { Options } from "generic-pool";
+import * as nano from "nano";
 
-import { AppController } from './controllers/app.controller';
-import { createBrowserPool } from './browser-pool';
-import { ImageRenderService, WaitForOptions } from './services/image-render.service';
-import { IImageStorage, ImageStorageService } from './services/image-storage.service';
-import { AmazonS3StorageProvider } from './storage/amazon-s3-storage.provider';
-import { CouchDbStorageProvider } from './storage/couch-db-storage.provider';
-import { StubStorageProvider } from './storage/stub-storage.provider';
-import { winstonLogger } from './winston-logger';
-import { AllowListGuard } from './allow_list.guard';
-import { LoggerService } from './services/logger.service';
+import { AppController } from "./controllers/app.controller";
+import { createBrowserPool } from "./browser-pool";
+import { ImageRenderService, WaitForOptions } from "./services/image-render.service";
+import { IImageStorage, ImageStorageService } from "./services/image-storage.service";
+import { AmazonS3StorageProvider } from "./storage/amazon-s3-storage.provider";
+import { CouchDbStorageProvider } from "./storage/couch-db-storage.provider";
+import { StubStorageProvider } from "./storage/stub-storage.provider";
+import { winstonLogger } from "./winston-logger";
+import { AllowListGuard } from "./allow_list.guard";
+import { LoggerService } from "./services/logger.service";
 import * as winston from "winston";
 import { APP_GUARD } from "@nestjs/core";
 
 const imageStorageService = {
-  provide: 'ImageStorageService',
+  provide: "ImageStorageService",
   async useFactory() {
     let imageStorage: IImageStorage;
 
     switch (process.env.STORAGE_PROVIDER) {
-      case 's3':
+      case "s3":
         AWS.config.accessKeyId = process.env.AWS_ACCESS_KEY;
         AWS.config.secretAccessKey = process.env.AWS_SECRET_KEY;
         AWS.config.region = process.env.AWS_REGION;
         imageStorage = new AmazonS3StorageProvider(new AWS.S3(), process.env.AWS_BUCKET);
         break;
-      case 'couchdb':
+      case "couchdb":
         const protocol = process.env.COUCH_DB_PROTOCOL;
         const user = process.env.COUCH_DB_USER;
         const pass = process.env.COUCH_DB_PASS;
         const host = process.env.COUCH_DB_HOST;
         const port = process.env.COUCH_DB_PORT;
-        imageStorage = new CouchDbStorageProvider(
-          nano(`${protocol}://${user}:${pass}@${host}:${port}`),
-        );
+        imageStorage = new CouchDbStorageProvider(nano(`${protocol}://${user}:${pass}@${host}:${port}`));
         break;
       default:
         imageStorage = new StubStorageProvider(winstonLogger);
@@ -47,7 +45,7 @@ const imageStorageService = {
 };
 
 const imageRenderService = {
-  provide: 'ImageRenderService',
+  provide: "ImageRenderService",
   useFactory: (logger) => {
     const isValidInteger = (sample: any) => Number.isInteger(Number(sample));
     const opts: Options = {};
@@ -70,9 +68,9 @@ const imageRenderService = {
 
     const navigationOptions: Partial<WaitForOptions> = {};
     switch (process.env.BROWSER_WAIT_UNTIL) {
-      case 'load':
-      case 'domcontentloaded':
-      case 'networkidle':
+      case "load":
+      case "domcontentloaded":
+      case "networkidle":
         navigationOptions.waitUntil = process.env.BROWSER_WAIT_UNTIL;
         break;
     }
@@ -84,7 +82,7 @@ const imageRenderService = {
     const browserPool = createBrowserPool(opts);
     return new ImageRenderService(browserPool, logger, navigationOptions);
   },
-  inject: [LoggerService]
+  inject: [LoggerService],
 };
 
 const loggerService = {
@@ -95,7 +93,7 @@ const loggerService = {
 const allowListGuard = {
   provide: APP_GUARD,
   useFactory: (logger) => new AllowListGuard(logger, process.env.ALLOW_LIST),
-  inject: [LoggerService]
+  inject: [LoggerService],
 };
 
 @Module({

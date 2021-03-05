@@ -9,7 +9,7 @@
     "dev": "nodemon",
     "compile": "tsc",
     "build": "run-s clean compile",
-    "format": "prettier --write \"{src}/**/*.(t|j)s*\""
+    "format": "prettier --write \"./src/**/*.ts\""
   },
   "engines": {
     "node": ">= 10",
