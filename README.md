@@ -80,6 +80,8 @@ Playwright requires Node.js version 10.15 or above. The browser binaries for Chr
 
 Allow domain specific requests by passing in an ALLOW_LIST. The list should be **comma separated**, **not include spaces**, and should be the **domain name only**.
 
+If this value is either `undefined || ""`, url-to-png will allow any domain to be rendered.
+
 ```
 ALLOW_LIST=jasonraimondi.com,github.com
 ```
