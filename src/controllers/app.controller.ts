@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Query, Res } from '@nestjs/common';
 
 import { ConfigApi, IConfigAPI } from '../config.api';
 import { ImageRenderService } from '../services/image-render.service';
@@ -16,28 +16,8 @@ export class AppController {
 
   @Get()
   public async root(@Res() response, @Query() query: ConfigApi) {
-    const errors = [];
     const config: IConfigAPI = {};
     let forceReload = false;
-
-    if (!query.url) {
-      errors.push('url is required');
-    }
-
-    if (!this.isURL(query.url)) {
-      const message = `Invalid URL: ( ${query.url} )`;
-      if (query.url !== undefined) {
-        this.loggerService.verbose(message);
-      }
-
-      errors.push(message);
-    }
-
-    if (errors.length > 0) {
-      response.status(400);
-      response.json(errors);
-      return;
-    }
 
     if (query.width) {
       config.width = Number(query.width);
@@ -113,21 +93,11 @@ export class AppController {
   }
 
   protected errorMessage(err: Error, response) {
-    response.status(500);
-    return response.json({
+    throw new HttpException({
       name: err.name,
       message: err.message,
       stack: err.stack,
-    });
-  }
-
-  private isURL(unknown: string): boolean {
-    try {
-      new URL(unknown);
-      return true;
-    } catch (_) {
-      return false
-    }
+    }, HttpStatus.INTERNAL_SERVER_ERROR)
   }
 
   private configToString(configAPI: IConfigAPI) {
