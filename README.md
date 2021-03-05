@@ -76,6 +76,14 @@ Playwright requires Node.js version 10.15 or above. The browser binaries for Chr
   * **Firefox** requires Ubuntu 18.04+
   * For **Ubuntu 18.04**, the additional dependencies are defined in the [playwright Docker image](https://github.com/microsoft/playwright/blob/master/utils/docker/Dockerfile.bionic), which is based on Ubuntu.
 
+## Allow List
+
+Allow domain specific requests by passing in an ALLOW_LIST. The list should be **comma separated**, **not include spaces**, and should be the **domain name only**.
+
+```
+ALLOW_LIST=jasonraimondi.com,github.com
+```
+
 ## Playwright Options
 
 Please see the Playwright API documentation [here](https://playwright.dev/docs/api/class-page#pagegotourl-options) for further knowledge.
@@ -131,12 +139,6 @@ COUCH_DB_PROTOCOL=
 COUCH_DB_HOST=
 COUCH_DB_USER=
 COUCH_DB_PASS=
-```
-
-## ALLOW_LIST
-
-```
-ALLOW_LIST=jasonraimondi.com,github.com
 ```
 
 ## Sources
