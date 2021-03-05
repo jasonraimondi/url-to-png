@@ -20,6 +20,7 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 - `isMobile: boolean` - Adds mobile flag to user agent - **Optional** - Default: `false
 - `isFullPage: boolean` - Render full page instead of viewport crop - **Optional** - Default: `false`
 - `isDarkMode: boolean` - Prefer color scheme dark - **Optional** - Default: `false`
+- `deviceScaleFactor: number` - Specify device scale factor (can be thought of as dpr) - **Optional** - Default: `1`
 
 ## How to Use:
 
@@ -60,6 +61,7 @@ http://localhost:3000?url=https://jasonraimondi.com&width=400&height=400
 http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
 http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
 http://localhost:3000?url=https://jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
+http://localhost:3000?url=https://jasonraimondi.com&isMobile=true&isFullPage=true&viewPortWidth=375&width=375&deviceScaleFactor=1
 ```
 
 ## System Requirements
