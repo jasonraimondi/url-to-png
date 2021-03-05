@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { Options } from 'generic-pool';
 import * as nano from 'nano';
@@ -11,6 +11,7 @@ import { AmazonS3StorageProvider } from './storage/amazon-s3-storage.provider';
 import { CouchDbStorageProvider } from './storage/couch-db-storage.provider';
 import { StubStorageProvider } from './storage/stub-storage.provider';
 import { winstonLogger } from './winston-logger';
+import { AllowListMiddleware } from './middlewares/allowlist.middleware';
 
 const imageStorageService = {
   provide: 'ImageStorageService',
@@ -94,4 +95,10 @@ const loggerService = {
   controllers: [AppController],
   providers: [imageRenderService, imageStorageService, loggerService],
 })
-export class ApplicationModule {}
+export class ApplicationModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AllowListMiddleware)
+      .forRoutes('/')
+  }
+}
