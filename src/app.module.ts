@@ -1,17 +1,20 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { Options } from 'generic-pool';
 import * as nano from 'nano';
 
 import { AppController } from './controllers/app.controller';
 import { createBrowserPool } from './browser-pool';
-import { ImageRenderService, WaitForOptions } from "./services/image-render.service";
+import { ImageRenderService, WaitForOptions } from './services/image-render.service';
 import { IImageStorage, ImageStorageService } from './services/image-storage.service';
 import { AmazonS3StorageProvider } from './storage/amazon-s3-storage.provider';
 import { CouchDbStorageProvider } from './storage/couch-db-storage.provider';
 import { StubStorageProvider } from './storage/stub-storage.provider';
 import { winstonLogger } from './winston-logger';
-import { AllowListMiddleware } from './middlewares/allowlist.middleware';
+import { AllowListGuard } from './allow_list.guard';
+import { LoggerService } from './services/logger.service';
+import * as winston from "winston";
+import { APP_GUARD } from "@nestjs/core";
 
 const imageStorageService = {
   provide: 'ImageStorageService',
@@ -45,7 +48,7 @@ const imageStorageService = {
 
 const imageRenderService = {
   provide: 'ImageRenderService',
-  async useFactory() {
+  useFactory: (logger) => {
     const isValidInteger = (sample: any) => Number.isInteger(Number(sample));
     const opts: Options = {};
 
@@ -79,26 +82,25 @@ const imageRenderService = {
     }
 
     const browserPool = createBrowserPool(opts);
-    return new ImageRenderService(browserPool, winstonLogger, navigationOptions);
+    return new ImageRenderService(browserPool, logger, navigationOptions);
   },
+  inject: [LoggerService]
 };
 
 const loggerService = {
-  provide: 'LoggerService',
-  useFactory() {
-    return winstonLogger;
-  },
+  provide: LoggerService,
+  useValue: winstonLogger,
+};
+
+const allowListGuard = {
+  provide: APP_GUARD,
+  useFactory: (logger) => new AllowListGuard(logger, process.env.ALLOW_LIST),
+  inject: [LoggerService]
 };
 
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [imageRenderService, imageStorageService, loggerService],
+  providers: [imageRenderService, imageStorageService, loggerService, allowListGuard],
 })
-export class ApplicationModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AllowListMiddleware)
-      .forRoutes('/')
-  }
-}
+export class ApplicationModule {}

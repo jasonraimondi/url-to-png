@@ -1,6 +1,7 @@
 import helmet from 'fastify-helmet';
 import rateLimit from 'fastify-rate-limit';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -18,6 +19,7 @@ async function bootstrap() {
     }
   );
 
+  app.useGlobalPipes(new ValidationPipe());
   app.enableShutdownHooks();
 
   await app.register(rateLimit, { max: 100, timeWindow: '1 minute' });

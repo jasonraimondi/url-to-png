@@ -26,6 +26,8 @@
     "@nestjs/core": "^7.6.12",
     "@nestjs/platform-fastify": "^7.6.12",
     "aws-sdk": "^2.847.0",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
     "fastify-helmet": "^5.2.0",
     "fastify-rate-limit": "^5.0.1",
@@ -39,7 +41,6 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/express": "^4.17.11",
     "@types/generic-pool": "^3.1.9",
     "@types/node": "^14.14.29",
     "cross-env": "^7.0.3",
