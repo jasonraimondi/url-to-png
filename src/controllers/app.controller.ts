@@ -76,14 +76,14 @@ export class AppController {
       try {
         imageBuffer = await this.imageRenderService.screenshot(query.url, config);
       } catch (err) {
-        this.loggerService.debug(err.message);
+        this.loggerService.error(err.message);
         return this.errorMessage(err, response);
       }
 
       try {
         await this.imageStorageService.storeImage(imageId, imageBuffer);
       } catch (err) {
-        this.loggerService.debug(err.message);
+        this.loggerService.error(err.message);
       }
     }
 
