@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/playwright:focal as baserepo
 ENV DUMB_INIT_VERSION=1.2.5 \
     NODE_ENV='production'
 WORKDIR /app
-RUN npm install -g npm@7 \
+RUN npm install -g pnpm \
     && chown -R pwuser:pwuser /app
 
 
@@ -14,10 +14,10 @@ RUN apt-get update \
 USER pwuser
 WORKDIR /app
 COPY package* /app
-RUN npm ci --production=false --logLevel=error
+RUN pnpm install --production false
 COPY tsconfig.json /app/
 COPY src /app/src
-RUN npm run build
+RUN pnpm build
 
 
 FROM baserepo
