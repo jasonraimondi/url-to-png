@@ -73,10 +73,8 @@ export class ImageRenderService implements OnApplicationShutdown {
       const screenshot = await page.screenshot({ fullPage: config.isFullPage });
       image = await this.resize(screenshot, config.width, config.height);
       await this.browserPool.release(browser);
-    } catch (err) {
-      this.logger.debug(JSON.stringify(err));
     } finally {
-      page.close().catch((e) => this.logger.error(e.message));
+      await page.close();
     }
 
     return image ?? false;
