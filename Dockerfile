@@ -27,7 +27,7 @@ RUN dpkg -i /dumb-init_*.deb \
     && rm -f /dumb-init_*.deb
 USER pwuser
 COPY --from=builder --chown=pwuser:pwuser /app/package* /app/
-RUN npm ci --production --logLevel=error
+RUN pnpm install --production
 COPY --from=builder --chown=pwuser:pwuser /app/dist /app/dist
 EXPOSE 3000
 ENTRYPOINT ["dumb-init", "--"]
