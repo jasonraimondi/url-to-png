@@ -41,8 +41,8 @@ Serve the project
 ```
 git clone git@github.com:jasonraimondi/url-to-png.git
 cd url-to-png
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 #### Up and Running?
