@@ -55,9 +55,8 @@ export class ImageRenderService implements OnApplicationShutdown {
       }
     }
 
-    let browser;
+    let browser = await this.browserPool.acquire();
     try {
-      browser = await this.browserPool.acquire();
       const page = await browser.newPage({
         viewport: {
           width: config.viewPortWidth,
@@ -79,9 +78,7 @@ export class ImageRenderService implements OnApplicationShutdown {
       }
       return image ?? false;
     } finally {
-      if (browser) {
-        await this.browserPool.release(browser);
-      }
+      await this.browserPool.release(browser);
     }
   }
 
