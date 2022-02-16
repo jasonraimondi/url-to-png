@@ -55,7 +55,7 @@ export class ImageRenderService implements OnApplicationShutdown {
       }
     }
 
-    let browser = await this.browserPool.acquire();
+    const browser = await this.browserPool.acquire();
     try {
       const page = await browser.newPage({
         viewport: {
