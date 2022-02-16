@@ -56,28 +56,30 @@ export class ImageRenderService implements OnApplicationShutdown {
     }
 
     const browser = await this.browserPool.acquire();
-    const page = await browser.newPage({
-      viewport: {
-        width: config.viewPortWidth,
-        height: config.viewPortHeight,
-      },
-      isMobile: config.isMobile,
-      colorScheme: config.isDarkMode ? "dark" : "light",
-      deviceScaleFactor: config.deviceScaleFactor,
-    });
-
-    let image: Buffer;
-
     try {
-      await page.goto(url, this.NAV_OPTIONS);
-      const screenshot = await page.screenshot({ fullPage: config.isFullPage });
-      image = await this.resize(screenshot, config.width, config.height);
-      await this.browserPool.release(browser);
-    } finally {
-      await page.close();
-    }
+      const page = await browser.newPage({
+        viewport: {
+          width: config.viewPortWidth,
+          height: config.viewPortHeight,
+        },
+        isMobile: config.isMobile,
+        colorScheme: config.isDarkMode ? "dark" : "light",
+        deviceScaleFactor: config.deviceScaleFactor,
+      });
 
-    return image ?? false;
+      let image: Buffer;
+
+      try {
+        await page.goto(url, this.NAV_OPTIONS);
+        const screenshot = await page.screenshot({ fullPage: config.isFullPage });
+        image = await this.resize(screenshot, config.width, config.height);
+      } finally {
+        await page.close();
+      }
+      return image ?? false;
+    } finally {
+      await this.browserPool.release(browser);
+    }
   }
 
   private async resize(image, width: number, height: number): Promise<Buffer> {
