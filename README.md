@@ -11,6 +11,31 @@
 
 A URL to PNG generator over HTTP with a fairly simple API accessed via query params passed to the servers single endpoint.
 
+## Getting Started
+
+### Docker
+
+Run the following command:
+
+```
+docker run --rm -p 3000:3000 jasonraimondi/url-to-png
+```
+
+On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)
+
+### Local Serve
+
+Serve the project
+
+```
+git clone git@github.com:jasonraimondi/url-to-png.git
+cd url-to-png
+pnpm install
+pnpm dev
+```
+
+## Query Params
+
 - `url: string` - Valid URL to be captured - **Required**
 - `width: number` - Width of output screenshot - **Optional** - Default: `250`
 - `height: number` - Height of output screenshot - **Optional** - Default: `250`
@@ -22,34 +47,9 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 - `isDarkMode: boolean` - Prefer color scheme dark - **Optional** - Default: `false`
 - `deviceScaleFactor: number` - Specify device scale factor (can be thought of as dpr) - **Optional** - Default: `1`
 
-## How to Use:
+Try it out at `localhost:3000?url=https://www.jasonraimondi.com&isDarkMode=true` and you should get back an image capture of my website homepage.
 
-#### A) Docker
-
-Run the following command:
-
-```
-docker run --rm -p 3000:3000 jasonraimondi/url-to-png
-```
-
-On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)
-
-#### B) Local Serve
-
-Serve the project
-
-```
-git clone git@github.com:jasonraimondi/url-to-png.git
-cd url-to-png
-pnpm install
-pnpm dev
-```
-
-#### Up and Running?
-
-Navigate to `localhost:3000?url=https://www.jasonraimondi.com` and you should get back an image capture of my website homepage.
-
-Go ahead and try any of the following:
+All sorts of combos work:
 
 ```
 http://localhost:3000?url=https://jasonraimondi.com
