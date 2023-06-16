@@ -1,5 +1,5 @@
-import helmet from "fastify-helmet";
-import rateLimit from "fastify-rate-limit";
+import helmet from "@fastify/helmet";
+import rateLimit from "@fastify/rate-limit";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";

@@ -17,7 +17,7 @@ import * as winston from "winston";
 import { APP_GUARD } from "@nestjs/core";
 
 const imageStorageService = {
-  provide: "ImageStorageService",
+  provide: ImageStorageService,
   async useFactory() {
     let imageStorage: IImageStorage;
 
@@ -45,7 +45,7 @@ const imageStorageService = {
 };
 
 const imageRenderService = {
-  provide: "ImageRenderService",
+  provide: ImageRenderService,
   useFactory: (logger) => {
     const isValidInteger = (sample: any) => Number.isInteger(Number(sample));
     const opts: Options = {};

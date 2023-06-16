@@ -35,7 +35,7 @@ export class AllowListGuard implements CanActivate {
     return true;
   }
 
-  formatAllowList(allowList?: string): undefined|string[] {
+  formatAllowList(allowList?: string): undefined | string[] {
     if (allowList === undefined || allowList === "") return;
     return allowList
       .split(",")
