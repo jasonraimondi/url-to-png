@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
-import * as AWS from "aws-sdk";
+import { APP_GUARD } from "@nestjs/core";
+import { S3Client } from "@aws-sdk/client-s3";
 import { Options } from "generic-pool";
 import * as nano from "nano";
 
@@ -13,8 +14,6 @@ import { StubStorageProvider } from "./storage/stub-storage.provider";
 import { winstonLogger } from "./winston-logger";
 import { AllowListGuard } from "./allow_list.guard";
 import { LoggerService } from "./services/logger.service";
-import * as winston from "winston";
-import { APP_GUARD } from "@nestjs/core";
 
 const imageStorageService = {
   provide: ImageStorageService,
@@ -23,10 +22,16 @@ const imageStorageService = {
 
     switch (process.env.STORAGE_PROVIDER) {
       case "s3":
-        AWS.config.accessKeyId = process.env.AWS_ACCESS_KEY;
-        AWS.config.secretAccessKey = process.env.AWS_SECRET_KEY;
-        AWS.config.region = process.env.AWS_REGION;
-        imageStorage = new AmazonS3StorageProvider(new AWS.S3(), process.env.AWS_BUCKET);
+        imageStorage = new AmazonS3StorageProvider(
+          new S3Client({
+            region: process.env.AWS_REGION,
+            credentials: {
+              accessKeyId: process.env.AWS_ACCESS_KEY,
+              secretAccessKey: process.env.AWS_SECRET_KEY,
+            },
+          }),
+          process.env.AWS_BUCKET,
+        );
         break;
       case "couchdb":
         const protocol = process.env.COUCH_DB_PROTOCOL;
@@ -39,6 +44,8 @@ const imageStorageService = {
       default:
         imageStorage = new StubStorageProvider(winstonLogger);
     }
+
+    console.log(imageStorage.constructor.name)
 
     return new ImageStorageService(imageStorage);
   },
