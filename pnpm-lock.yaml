@@ -1388,8 +1388,8 @@ packages:
       - supports-color
     dev: false
 
-  /axios@1.4.0:
-    resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
+  /axios@1.6.1:
+    resolution: {integrity: sha512-vfBmhDpKafglh0EldBEbVuoe7DyAavGSLWhuSm5ZSEKQnHhBf0xAAwybbNH1IkrJNGnS/VG4I5yxig1pCEXE4g==}
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
@@ -2329,7 +2329,7 @@ packages:
     resolution: {integrity: sha512-P3zSoD/sxAgDs/IE9eqpeAXqTdQ/gA9e9dnzaltr4A3WUo/n+eh66T873L+md5v8lXOutX/7dvcHFOO22f5hDw==}
     engines: {node: '>=14'}
     dependencies:
-      axios: 1.4.0
+      axios: 1.6.1
       node-abort-controller: 3.1.1
       qs: 6.11.2
     transitivePeerDependencies:
