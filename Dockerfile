@@ -8,7 +8,7 @@ RUN npm install -g pnpm \
 FROM baserepo as builder
 WORKDIR /
 RUN apt-get update \
-    && apt-get install -y wget tini
+    && apt-get install -y wget
 USER pwuser
 WORKDIR /app
 COPY package* /app
