@@ -12,7 +12,7 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 Run the following command:
 
 ```
-docker run --rm -p 3000:3000 jasonraimondi/url-to-png
+docker run --rm -p 3000:3000 ghcr.io/jasonraimondi/url-to-png
 ```
 
 On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)
