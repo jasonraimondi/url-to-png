@@ -137,6 +137,15 @@ COUCH_DB_USER=
 COUCH_DB_PASS=
 ```
 
+#### Filesystem
+
+To use your local filesystem, set `STORAGE_PROVIDER=filesystem`, ensure the following variables are loaded in your `.env`:
+
+```
+STORAGE_PROVIDER=filesystem
+IMAGE_STORAGE_PATH=/tmp/foo
+```
+
 ## Sources
 
 - Upstream Repository: [https://git.jasonraimondi.com/jason/url-to-png](https://git.jasonraimondi.com/jason/url-to-png)

@@ -14,6 +14,7 @@ import { StubStorageProvider } from "./storage/stub-storage.provider";
 import { winstonLogger } from "./winston-logger";
 import { AllowListGuard } from "./allow_list.guard";
 import { LoggerService } from "./services/logger.service";
+import { FileSystemStorageProvider } from "./storage/file-system-storage.provider";
 
 const imageStorageService = {
   provide: ImageStorageService,
@@ -40,6 +41,10 @@ const imageStorageService = {
         const host = process.env.COUCH_DB_HOST;
         const port = process.env.COUCH_DB_PORT;
         imageStorage = new CouchDbStorageProvider(nano(`${protocol}://${user}:${pass}@${host}:${port}`));
+        break;
+      case "filesystem":
+        const filePath = process.env.IMAGE_STORAGE_PATH;
+        imageStorage = new FileSystemStorageProvider(filePath, winstonLogger);
         break;
       default:
         imageStorage = new StubStorageProvider(winstonLogger);
