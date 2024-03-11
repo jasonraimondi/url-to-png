@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:focal as baserepo
+FROM mcr.microsoft.com/playwright:v1.40.0-jammy as baserepo
 ENV NODE_ENV='production'
 WORKDIR /app
 RUN npm install -g pnpm \
@@ -11,7 +11,7 @@ RUN apt-get update \
     && apt-get install -y wget
 USER pwuser
 WORKDIR /app
-COPY package* /app
+COPY package.json pnpm-lock.yaml /app
 RUN pnpm install --production false
 COPY tsconfig.json /app/
 COPY src /app/src
@@ -23,7 +23,7 @@ ENV DOCKER=1
 RUN apt-get update \
     && apt-get install -y tini
 USER pwuser
-COPY --from=builder --chown=pwuser:pwuser /app/package* /app/
+COPY --from=builder --chown=pwuser:pwuser /app/package.json /app/pnpm-lock.yaml /app/
 RUN pnpm install --production
 COPY --from=builder --chown=pwuser:pwuser /app/dist /app/dist
 EXPOSE 3000
