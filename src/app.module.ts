@@ -23,12 +23,17 @@ const imageStorageService = {
 
     switch (process.env.STORAGE_PROVIDER) {
       case "s3":
+        const accessKeyId = process.env.AWS_ACCESS_KEY_ID ?? process.env.AWS_ACCESS_KEY;
+        const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY ?? process.env.AWS_SECRET_KEY;
+        const region = process.env.AWS_DEFAULT_REGION ?? process.env.AWS_REGION;
+
         imageStorage = new AmazonS3StorageProvider(
           new S3Client({
-            region: process.env.AWS_REGION,
+            region,
+            endpoint: process.env.AWS_ENDPOINT_URL_S3,
             credentials: {
-              accessKeyId: process.env.AWS_ACCESS_KEY,
-              secretAccessKey: process.env.AWS_SECRET_KEY,
+              accessKeyId,
+              secretAccessKey,
             },
           }),
           process.env.AWS_BUCKET,
