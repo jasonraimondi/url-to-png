@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.40.0-jammy as baserepo
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/playwright:v1.40.0-jammy as baserepo
 ENV NODE_ENV='production'
 WORKDIR /app
 RUN npm install -g pnpm \
