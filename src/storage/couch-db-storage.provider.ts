@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import * as md5 from "md5";
-import * as couchDBNano from "nano";
+import md5 from "md5";
+import couchDBNano from "nano";
 
-import { IImageStorage } from "../services/image-storage.service";
+import { IImageStorage } from "../services/image-storage.service.js";
 
 @Injectable()
 export class CouchDbStorageProvider implements IImageStorage {
@@ -21,7 +21,7 @@ export class CouchDbStorageProvider implements IImageStorage {
     }
   }
 
-  public async storeImage(imageId: string, image): Promise<boolean> {
+  public async storeImage(imageId: string, image: Buffer): Promise<boolean> {
     const images = this.images;
     imageId = md5(imageId);
     try {

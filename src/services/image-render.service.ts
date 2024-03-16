@@ -1,10 +1,10 @@
 import { Injectable, OnApplicationShutdown } from "@nestjs/common";
 import { Pool } from "generic-pool";
 import { Browser } from "playwright";
-import * as sharp from "sharp";
+import sharp from "sharp";
 
-import { IConfigAPI } from "../config.api";
-import { LoggerService } from "./logger.service";
+import { IConfigAPI } from "../config.api.js";
+import { LoggerService } from "./logger.service.js";
 
 export type WaitForOptions = {
   timeout: number;
@@ -18,7 +18,7 @@ export class ImageRenderService implements OnApplicationShutdown {
   constructor(
     private readonly browserPool: Pool<Browser>,
     private readonly logger: LoggerService,
-    private readonly navigationOptions: Partial<WaitForOptions>,
+    navigationOptions: Partial<WaitForOptions>,
   ) {
     this.NAV_OPTIONS = {
       waitUntil: "networkidle",
@@ -59,8 +59,8 @@ export class ImageRenderService implements OnApplicationShutdown {
     try {
       const page = await browser.newPage({
         viewport: {
-          width: config.viewPortWidth,
-          height: config.viewPortHeight,
+          width: config.viewPortWidth!,
+          height: config.viewPortHeight!,
         },
         isMobile: config.isMobile,
         colorScheme: config.isDarkMode ? "dark" : "light",
@@ -72,7 +72,7 @@ export class ImageRenderService implements OnApplicationShutdown {
       try {
         await page.goto(url, this.NAV_OPTIONS);
         const screenshot = await page.screenshot({ fullPage: config.isFullPage });
-        image = await this.resize(screenshot, config.width, config.height);
+        image = await this.resize(screenshot, config.width!, config.height!);
       } finally {
         await page.close();
       }
@@ -82,7 +82,7 @@ export class ImageRenderService implements OnApplicationShutdown {
     }
   }
 
-  private async resize(image, width: number, height: number): Promise<Buffer> {
+  private async resize(image: Buffer, width: number, height: number): Promise<Buffer> {
     return await sharp(image).resize(width, height).toBuffer();
   }
 }

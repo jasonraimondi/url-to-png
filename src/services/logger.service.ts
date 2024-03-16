@@ -27,7 +27,7 @@ export class LoggerService implements ILoggerService {
     return this.logger.warn(message);
   }
 
-  public error(message: string, trace?: string) {
+  public error(message: string, trace?: any) {
     return this.logger.error(message, trace);
   }
 }

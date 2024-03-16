@@ -13,7 +13,7 @@ export interface IConfigAPI {
 
 export class ConfigApi implements IConfigAPI {
   @IsUrl()
-  public readonly url: string;
+  public readonly url!: string;
 
   @IsOptional()
   @IsBooleanString()

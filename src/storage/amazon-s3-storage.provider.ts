@@ -1,5 +1,5 @@
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { IImageStorage } from "../services/image-storage.service";
+import { IImageStorage } from "../services/image-storage.service.js";
 
 export class AmazonS3StorageProvider implements IImageStorage {
   constructor(private readonly s3: S3Client, private readonly BUCKET_NAME: string) {}

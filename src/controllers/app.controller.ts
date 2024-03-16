@@ -1,9 +1,10 @@
 import { Controller, Get, HttpException, HttpStatus, Query, Res } from "@nestjs/common";
 
-import { ConfigApi, IConfigAPI } from "../config.api";
-import { ImageRenderService } from "../services/image-render.service";
-import { ImageStorageService } from "../services/image-storage.service";
-import { LoggerService } from "../services/logger.service";
+import { ConfigApi, IConfigAPI } from "../config.api.js";
+import { ImageRenderService } from "../services/image-render.service.js";
+import { ImageStorageService } from "../services/image-storage.service.js";
+import { LoggerService } from "../services/logger.service.js";
+import { FastifyReply } from "fastify";
 
 @Controller()
 export class AppController {
@@ -11,10 +12,11 @@ export class AppController {
     private readonly imageStorageService: ImageStorageService,
     private readonly imageRenderService: ImageRenderService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) {
+  }
 
   @Get()
-  public async root(@Res() response, @Query() query: ConfigApi) {
+  public async root(@Res() response: FastifyReply, @Query() query: ConfigApi) {
     const config: IConfigAPI = {};
     let forceReload = false;
 
@@ -66,24 +68,26 @@ export class AppController {
       config.deviceScaleFactor = Number(query.deviceScaleFactor);
     }
 
+
     const date = new Date();
     const dateString = date.toLocaleDateString().replace(/\//g, "-");
     const imageId = dateString + "." + this.slugify(query.url) + this.configToString(config);
 
+    console.log(this.imageStorageService, this.loggerService);
     let imageBuffer: any = await this.imageStorageService.fetchImage(imageId);
 
     if (imageBuffer === null || forceReload) {
       try {
         imageBuffer = await this.imageRenderService.screenshot(query.url, config);
       } catch (err) {
-        this.loggerService.error(err.message);
-        return this.errorMessage(err, response);
+        this.loggerService.error("Error rendering image", err);
+        return this.errorMessage(err as Error);
       }
 
       try {
         await this.imageStorageService.storeImage(imageId, imageBuffer);
       } catch (err) {
-        this.loggerService.error(err.message);
+        this.loggerService.error("Error storing image", err);
       }
     }
 
@@ -91,7 +95,7 @@ export class AppController {
     return;
   }
 
-  protected errorMessage(err: Error, response) {
+  protected errorMessage(err: Error) {
     throw new HttpException(
       {
         name: err.name,
@@ -103,18 +107,12 @@ export class AppController {
   }
 
   private configToString(configAPI: IConfigAPI) {
-    let configString = "";
-
-    for (const key in configAPI) {
-      if (configAPI.hasOwnProperty(key)) {
-        configString += `_${key}-${configAPI[key]}`;
-      }
-    }
-
-    return configString;
+    return Object.entries(configAPI)
+      .map(([key, value]) => `_${key}-${value}`)
+      .reduce((prev, next) => `${prev}${next}`, "");
   }
 
-  private slugify(text) {
+  private slugify(text: string) {
     return text
       .toString()
       .toLowerCase()

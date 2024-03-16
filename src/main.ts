@@ -4,8 +4,8 @@ import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 
-import { ApplicationModule } from "./app.module";
-import { winstonLogger } from "./winston-logger";
+import { ApplicationModule } from "./app.module.js";
+import { winstonLogger } from "./winston-logger.js";
 
 
 if (process.env.AWS_ACCESS_KEY) {
@@ -28,8 +28,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableShutdownHooks();
 
-  await app.register(rateLimit, { max: 100, timeWindow: "1 minute" });
-  await app.register(helmet, { contentSecurityPolicy: false });
+  await app.register(rateLimit as any, { max: 100, timeWindow: "1 minute" });
+  await app.register(helmet as any, { contentSecurityPolicy: false });
 
   await app.listen(3000, "0.0.0.0");
 }

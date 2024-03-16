@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, UnauthorizedException } from "@nestjs/common";
-import { LoggerService } from "./services/logger.service";
+import { LoggerService } from "./services/logger.service.js";
 
 export class AllowListGuard implements CanActivate {
-  private readonly allowedHosts: string[];
+  private readonly allowedHosts?: string[];
 
   constructor(private readonly logger: LoggerService, allowList?: string) {
     this.allowedHosts = this.formatAllowList(allowList);
