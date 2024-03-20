@@ -7,11 +7,9 @@ RUN npm install -g pnpm \
 
 FROM baserepo as builder
 WORKDIR /
-RUN apt-get update \
-    && apt-get install -y wget
 USER pwuser
 WORKDIR /app
-COPY package.json pnpm-lock.yaml /app
+COPY package.json pnpm-lock.yaml /app/
 RUN pnpm install --production false
 COPY tsconfig.json tsconfig.build.json /app/
 COPY src /app/src
@@ -20,12 +18,9 @@ RUN pnpm build
 
 FROM baserepo
 ENV DOCKER=1
-RUN apt-get update \
-    && apt-get install -y tini
 USER pwuser
 COPY --from=builder --chown=pwuser:pwuser /app/package.json /app/pnpm-lock.yaml /app/
-RUN pnpm install --production && pnpm exec playwright install
+RUN pnpm install --production && pnpm exec playwright install chromium
 COPY --from=builder --chown=pwuser:pwuser /app/dist /app/dist
 EXPOSE 3000
-ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD node -r dotenv/config dist/main.js
+CMD ["node", "-r", "dotenv/config", "dist/main.js"]

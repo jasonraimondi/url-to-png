@@ -12,18 +12,6 @@ import {
 } from "./lib/factory.js";
 import { logger } from "./lib/logger.js";
 
-if (process.env.AWS_ACCESS_KEY) {
-  logger.warn("AWS_ACCESS_KEY is deprecated, please use AWS_ACCESS_KEY_ID");
-}
-
-if (process.env.AWS_SECRET_KEY) {
-  logger.warn("AWS_SECRET_KEY is deprecated, please use AWS_SECRET_ACCESS_KEY");
-}
-
-if (process.env.AWS_REGION) {
-  logger.warn("AWS_REGION is deprecated, please use AWS_DEFAULT_REGION");
-}
-
 let server: ReturnType<typeof serve>;
 
 async function main() {

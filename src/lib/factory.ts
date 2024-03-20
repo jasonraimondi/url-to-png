@@ -23,6 +23,9 @@ export function createImageRenderService(browserPool: BrowserPool) {
     case "networkidle":
       navigationOptions.waitUntil = process.env.BROWSER_WAIT_UNTIL;
       break;
+    default:
+      navigationOptions.waitUntil = "domcontentloaded";
+      break;
   }
 
   return new ImageRenderService(browserPool, navigationOptions);
@@ -59,6 +62,7 @@ export function createImageStorageService(): ImageStorage {
       const filePath = process.env.IMAGE_STORAGE_PATH!;
       imageStorage = new FileSystemStorageProvider(filePath);
       break;
+    case "stub":
     default:
       imageStorage = new StubStorageProvider();
   }
