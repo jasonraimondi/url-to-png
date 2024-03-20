@@ -1,11 +1,9 @@
-import { Injectable } from "@nestjs/common";
 import md5 from "md5";
 import couchDBNano from "nano";
 
-import { IImageStorage } from "../services/image-storage.service.js";
+import { ImageStorage } from "./_base.js";
 
-@Injectable()
-export class CouchDbStorageProvider implements IImageStorage {
+export class CouchDbStorageProvider implements ImageStorage {
   constructor(private readonly couchDB: couchDBNano.ServerScope) {}
 
   get images() {

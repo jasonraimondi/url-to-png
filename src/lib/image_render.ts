@@ -1,23 +1,23 @@
-import { Injectable, OnApplicationShutdown } from "@nestjs/common";
-import { Pool } from "generic-pool";
-import { Browser } from "playwright";
 import sharp from "sharp";
 
-import { IConfigAPI } from "../config.api.js";
-import { LoggerService } from "./logger.service.js";
+import { BrowserPool } from "./browser_pool.js";
+import { logger } from "./logger.js";
+import { IConfigAPI } from "./schema.js";
 
 export type WaitForOptions = {
   timeout: number;
   waitUntil: "load" | "domcontentloaded" | "networkidle";
 };
 
-@Injectable()
-export class ImageRenderService implements OnApplicationShutdown {
+export interface ImageRenderInterface {
+  screenshot(url: string, config: IConfigAPI): Promise<Buffer>;
+}
+
+export class ImageRenderService implements ImageRenderInterface {
   private readonly NAV_OPTIONS: WaitForOptions;
 
   constructor(
-    private readonly browserPool: Pool<Browser>,
-    private readonly logger: LoggerService,
+    private readonly browserPool: BrowserPool,
     navigationOptions: Partial<WaitForOptions>,
   ) {
     this.NAV_OPTIONS = {
@@ -25,16 +25,11 @@ export class ImageRenderService implements OnApplicationShutdown {
       timeout: 10000,
       ...navigationOptions,
     };
-    this.logger.debug(`navigation options ${JSON.stringify(this.NAV_OPTIONS)}`);
+    logger.debug(`navigation options`);
+    logger.debug(this.NAV_OPTIONS);
   }
 
-  async onApplicationShutdown(signal: string) {
-    this.logger.info(`received signal ${signal}, draining browserPool`);
-    await this.browserPool.drain();
-    await this.browserPool.clear();
-  }
-
-  public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer | boolean> {
+  public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer> {
     config = {
       viewPortWidth: 1080,
       viewPortHeight: 1080,
@@ -45,8 +40,6 @@ export class ImageRenderService implements OnApplicationShutdown {
       ...config,
     };
 
-    this.logger.debug(JSON.stringify(config));
-
     if (!config.width && !config.height) {
       config.width = 250;
 
@@ -56,27 +49,28 @@ export class ImageRenderService implements OnApplicationShutdown {
     }
 
     const browser = await this.browserPool.acquire();
+
     try {
       const page = await browser.newPage({
         viewport: {
           width: config.viewPortWidth!,
           height: config.viewPortHeight!,
         },
-        isMobile: config.isMobile,
+        isMobile: !!config.isMobile,
         colorScheme: config.isDarkMode ? "dark" : "light",
-        deviceScaleFactor: config.deviceScaleFactor,
+        deviceScaleFactor: config.deviceScaleFactor ?? 1,
       });
-
-      let image: Buffer;
 
       try {
         await page.goto(url, this.NAV_OPTIONS);
-        const screenshot = await page.screenshot({ fullPage: config.isFullPage });
-        image = await this.resize(screenshot, config.width!, config.height!);
+        return await this.resize(
+          await page.screenshot({ fullPage: !!config.isFullPage }),
+          config.width ?? 1000,
+          config.height ?? 1000,
+        );
       } finally {
         await page.close();
       }
-      return image ?? false;
     } finally {
       await this.browserPool.release(browser);
     }

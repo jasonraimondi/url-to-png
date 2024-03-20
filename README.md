@@ -12,7 +12,7 @@ A URL to PNG generator over HTTP with a fairly simple API accessed via query par
 Run the following command:
 
 ```
-docker run --rm -p 3000:3000 ghcr.io/jasonraimondi/url-to-png
+docker run --rm -p 3089:3089 ghcr.io/jasonraimondi/url-to-png
 ```
 
 On the hub: [Link to DockerHub](https://hub.docker.com/r/jasonraimondi/url-to-png/)
@@ -25,6 +25,8 @@ Serve the project
 git clone git@github.com:jasonraimondi/url-to-png.git
 cd url-to-png
 pnpm install
+# you may need to run this command if you are having issues with playwright
+pnpm exec playwright install
 pnpm dev
 ```
 
@@ -41,21 +43,21 @@ pnpm dev
 - `isDarkMode: boolean` - Prefer color scheme dark - **Optional** - Default: `false`
 - `deviceScaleFactor: number` - Specify device scale factor (can be thought of as dpr) - **Optional** - Default: `1`
 
-Try it out at `localhost:3000?url=https://www.jasonraimondi.com&isDarkMode=true` and you should get back an image capture of my website homepage.
+Try it out at `localhost:3089?url=https://www.jasonraimondi.com&isDarkMode=true` and you should get back an image capture of my website homepage.
 
 All sorts of combos work:
 
 ```
-http://localhost:3000?url=https://jasonraimondi.com
-http://localhost:3000?url=https://jasonraimondi.com&forceReload=true
-http://localhost:3000?url=https://jasonraimondi.com&isFullPage=true
-http://localhost:3000?url=https://jasonraimondi.com&isMobile=true
-http://localhost:3000?url=https://jasonraimondi.com&isDarkMode=true
-http://localhost:3000?url=https://jasonraimondi.com&width=400&height=400
-http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
-http://localhost:3000?url=https://jasonraimondi.com&isMobile=true&isFullPage=true&viewPortWidth=375&width=375&deviceScaleFactor=1
+http://localhost:3089?url=https://jasonraimondi.com
+http://localhost:3089?url=https://jasonraimondi.com&forceReload=true
+http://localhost:3089?url=https://jasonraimondi.com&isFullPage=true
+http://localhost:3089?url=https://jasonraimondi.com&isMobile=true
+http://localhost:3089?url=https://jasonraimondi.com&isDarkMode=true
+http://localhost:3089?url=https://jasonraimondi.com&width=400&height=400
+http://localhost:3089?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3089?url=https://jasonraimondi.com&viewPortHeight=400&viewPortWidth=400
+http://localhost:3089?url=https://jasonraimondi.com&isFullPage=true&isMobile=true&width=400&height=400&viewPortHeight=400&viewPortWidth=400
+http://localhost:3089?url=https://jasonraimondi.com&isMobile=true&isFullPage=true&viewPortWidth=375&width=375&deviceScaleFactor=1
 ```
 
 ## System Requirements
@@ -145,6 +147,24 @@ To use your local filesystem, set `STORAGE_PROVIDER=filesystem`, ensure the foll
 ```
 STORAGE_PROVIDER=filesystem
 IMAGE_STORAGE_PATH=/tmp/foo
+```
+
+## Metrics
+
+You can enable metrics by setting `METRICS=true` in your `.env` file. This will expose a `/metrics` endpoint for Prometheus to scrape.
+
+```json
+{
+  "poolMetrics": {
+    "spareResourceCapacity": 8,
+    "size": 2,
+    "available": 2,
+    "borrowed": 0,
+    "pending": 0,
+    "max": 10,
+    "min": 2
+  }
+}
 ```
 
 ## Sources

@@ -13,7 +13,7 @@ USER pwuser
 WORKDIR /app
 COPY package.json pnpm-lock.yaml /app
 RUN pnpm install --production false
-COPY tsconfig.json /app/
+COPY tsconfig.json tsconfig.build.json /app/
 COPY src /app/src
 RUN pnpm build
 

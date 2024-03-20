@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - next
     tags:
       - '*'
 
@@ -31,6 +32,8 @@ jobs:
       run: |
         if [[ $GITHUB_REF == refs/heads/main ]]; then
           echo "version=latest" >> $GITHUB_OUTPUT
+        elif [[ $GITHUB_REF == refs/heads/next ]]; then
+          echo "version=nightly" >> $GITHUB_OUTPUT
         else
           echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         fi

@@ -1,8 +1,12 @@
-import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { IImageStorage } from "../services/image-storage.service.js";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { logger } from "../logger.js";
+import { ImageStorage } from "./_base.js";
 
-export class AmazonS3StorageProvider implements IImageStorage {
-  constructor(private readonly s3: S3Client, private readonly BUCKET_NAME: string) {}
+export class AmazonS3StorageProvider implements ImageStorage {
+  constructor(
+    private readonly s3: S3Client,
+    private readonly BUCKET_NAME: string,
+  ) {}
 
   public async fetchImage(imageId: string) {
     const params = new GetObjectCommand({
@@ -11,10 +15,14 @@ export class AmazonS3StorageProvider implements IImageStorage {
     });
     try {
       const response = await this.s3.send(params);
-      return response.Body;
-    } catch(e) {
-      return null;
+      const body = response.Body;
+      if (body instanceof Uint8Array) {
+        return Buffer.from(body);
+      }
+    } catch (e) {
+      logger.error(e);
     }
+    return null;
   }
 
   public async storeImage(imageId: string, image: Buffer) {
