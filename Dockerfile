@@ -24,7 +24,7 @@ RUN apt-get update \
     && apt-get install -y tini
 USER pwuser
 COPY --from=builder --chown=pwuser:pwuser /app/package.json /app/pnpm-lock.yaml /app/
-RUN pnpm install --production
+RUN pnpm install --production && pnpm exec playwright install
 COPY --from=builder --chown=pwuser:pwuser /app/dist /app/dist
 EXPOSE 3000
 ENTRYPOINT ["/usr/bin/tini", "--"]

@@ -35,9 +35,13 @@ export function createApplication(
 
   if (process.env.METRICS === "true") {
     app.get("/metrics", c =>
-      c.json({
-        poolMetrics: browserPool.poolMetrics,
-      }),
+      c.json(
+        process.env.METRICS === "true"
+          ? {
+              poolMetrics: browserPool.poolMetrics,
+            }
+          : { message: "Metrics are disabled." },
+      ),
     );
   }
 

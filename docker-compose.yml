@@ -6,5 +6,64 @@ services:
     ports:
       - 3089:3089
     environment:
+      METRICS: true
       NODE_ENV: debug
       BROWSER_WAIT_UNTIL: networkidle
+      STORAGE_PROVIDER: s3
+      AWS_ACCESS_KEY_ID: miniominiominio
+      AWS_SECRET_ACCESS_KEY: miniominiominio
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ENDPOINT_URL_S3: http://minio:9000
+      AWS_FORCE_PATH_STYLE: true
+      AWS_BUCKET: url-to-png-uploads
+#      STORAGE_PROVIDER: couchdb
+#      COUCH_DB_PROTOCOL: http
+#      COUCH_DB_HOST: couchdb
+#      COUCH_DB_PORT: 5984
+#      COUCH_DB_USER: admin
+#      COUCH_DB_PASS: password
+
+  couchdb:
+    image: couchdb
+    container_name: couchdb
+    restart: always
+    ports:
+      - "5984:5984"
+    environment:
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+    volumes:
+      - couchdb-data:/opt/couchdb/data
+
+  minio:
+    image: minio/minio
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio-config:/root/.minio
+      - minio-data:/data
+    environment:
+      MINIO_ACCESS_KEY: miniominiominio
+      MINIO_SECRET_KEY: miniominiominio
+      MINIO_HTTP_TRACE: /dev/stdout
+
+  minio-mc:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host rm local;
+      /usr/bin/mc config host add --quiet --api s3v4 local http://minio:9000 miniominiominio miniominiominio;
+      /usr/bin/mc rb --force local/url-to-png-uploads/;
+      /usr/bin/mc mb --quiet local/url-to-png-uploads/;
+      /usr/bin/mc policy set public local/url-to-png-uploads;
+      exit 0;
+      "
+
+volumes:
+  couchdb-data:
+  minio-config:
+  minio-data:

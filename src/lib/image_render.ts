@@ -22,7 +22,7 @@ export class ImageRenderService implements ImageRenderInterface {
   ) {
     this.NAV_OPTIONS = {
       waitUntil: "networkidle",
-      timeout: 10000,
+      timeout: Number(process.env.BROWSER_TIMEOUT) || 10000,
       ...navigationOptions,
     };
     logger.debug(`navigation options`);

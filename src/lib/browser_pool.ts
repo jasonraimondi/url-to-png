@@ -34,10 +34,10 @@ export class BrowserPool {
 
   constructor({ poolOpts }: BrowserPoolConstructorArgs = {} as BrowserPoolConstructorArgs) {
     poolOpts = {
-      max: 10,
-      min: 2,
-      maxWaitingClients: 50,
-      idleTimeoutMillis: 15000,
+      max: Number(process.env.POOL_MAX) || 10,
+      min: Number(process.env.POOL_MIN) || 2,
+      maxWaitingClients: Number(process.env.POOL_MAX_WAITING_CLIENTS) || 50,
+      idleTimeoutMillis: Number(process.env.POOL_IDLE_TIMEOUT_MS) || 15000,
       ...poolOpts,
     };
     logger.info(poolOpts);

@@ -11,25 +11,7 @@ import { FileSystemStorageProvider } from "./storage/filesystem.js";
 import { AmazonS3StorageProvider } from "./storage/s3.js";
 import { StubStorageProvider } from "./storage/stub.js";
 
-export function createBrowserPool() {
-  const opts: Options = {};
-
-  if (Number.isInteger(Number(process.env.POOLS_MAX))) {
-    opts.max = Number(process.env.POOLS_MAX);
-  }
-
-  if (Number.isInteger(Number(process.env.POOLS_MIN))) {
-    opts.min = Number(process.env.POOLS_MIN);
-  }
-
-  if (Number.isInteger(Number(process.env.POOLS_MAX_WAITING))) {
-    opts.maxWaitingClients = Number(process.env.POOLS_MAX_WAITING);
-  }
-
-  if (Number.isInteger(Number(process.env.POOLS_MAX))) {
-    opts.max = Number(process.env.POOLS_MAX);
-  }
-
+export function createBrowserPool(opts: Options = {}) {
   return new BrowserPool({ poolOpts: opts });
 }
 
@@ -43,10 +25,6 @@ export function createImageRenderService(browserPool: BrowserPool) {
       break;
   }
 
-  if (Number.isInteger(Number(process.env.BROWSER_TIMEOUT))) {
-    navigationOptions.timeout = Number(process.env.BROWSER_TIMEOUT);
-  }
-
   return new ImageRenderService(browserPool, navigationOptions);
 }
 
@@ -56,12 +34,13 @@ export function createImageStorageService(): ImageStorage {
     case "s3":
       imageStorage = new AmazonS3StorageProvider(
         new S3Client({
-          region: process.env.AWS_DEFAULT_REGION!,
-          endpoint: process.env.AWS_ENDPOINT_URL_S3!,
+          region: process.env.AWS_DEFAULT_REGION ?? "us-east-1",
+          endpoint: process.env.AWS_ENDPOINT_URL_S3,
           credentials: {
             accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
           },
+          forcePathStyle: process.env.AWS_FORCE_PATH_STYLE === "true",
         }),
         process.env.AWS_BUCKET!,
       );

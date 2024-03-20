@@ -1,5 +1,5 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { logger } from "../logger.js";
+
 import { ImageStorage } from "./_base.js";
 
 export class AmazonS3StorageProvider implements ImageStorage {
@@ -20,7 +20,7 @@ export class AmazonS3StorageProvider implements ImageStorage {
         return Buffer.from(body);
       }
     } catch (e) {
-      logger.error(e);
+      // image not found, return null
     }
     return null;
   }

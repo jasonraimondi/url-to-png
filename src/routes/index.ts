@@ -39,7 +39,7 @@ export function getIndex(
 
     return c.body(imageBuffer, 200, {
       "Content-Type": "image/png",
-      // "Cache-Control": "public, max-age=31536000, immutable",
+      "Cache-Control": process.env.CACHE_CONTROL ?? "public, max-age=86400, immutable",
     });
   };
 }
