@@ -55,12 +55,12 @@ export function createApplication(
     return c.json({ message: err.message }, status);
   });
 
-  app.use("/*", handleExtractQueryParamsMiddleware(stringEncrypter));
+  app.use("/", handleExtractQueryParamsMiddleware(stringEncrypter));
 
   if (process.env.ALLOW_LIST && process.env.ALLOW_LIST.trim() !== "") {
     const allowList = formatAllowList(process.env.ALLOW_LIST);
     logger.info(`Allowed Domains: ${allowList.join(", ")}`);
-    app.use("/*", handleAllowListMiddleware(allowList));
+    app.use("/", handleAllowListMiddleware(allowList));
   }
 
   app.get("/", getIndex(imageStorageService, imageRenderService));
