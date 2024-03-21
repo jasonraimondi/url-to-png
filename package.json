@@ -10,7 +10,7 @@
     "dev": "tsx --watch src/main.ts | pino-pretty",
     "compile": "tsc --project tsconfig.build.json",
     "build": "run-s clean compile",
-    "format": "prettier --write \"./src/**/*.ts\"",
+    "format": "prettier --write \"./(src|tests)/**/*.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

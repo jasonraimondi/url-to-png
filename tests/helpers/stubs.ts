@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 
-import {ImageRenderInterface} from "../../src/lib/image_render.js";
+import { ImageRenderInterface } from "../../src/lib/image_render.js";
 
 export class StubImageRenderService implements ImageRenderInterface {
   static readonly POOL_METRICS = {
@@ -13,11 +13,10 @@ export class StubImageRenderService implements ImageRenderInterface {
     available: 1,
   };
 
-  async drainBrowserPool(): Promise<void> {
-  }
+  async drainBrowserPool(): Promise<void> {}
 
   async screenshot(): Promise<Buffer> {
-    const {join} = await import("path");
+    const { join } = await import("path");
     const filePath = join(__dirname, "./assets/test_img.png");
     return await fs.readFile(filePath);
   }

@@ -62,14 +62,16 @@ suite("app", () => {
     it("throws when invalid domain", async () => {
       const res = await app.request("/?url=bar");
       expect(res.status).toBe(400);
-      expect(await res.text()).toMatch(/Invalid query/ig);
+      expect(await res.text()).toMatch(/Invalid query/gi);
     });
   });
 
   describe("GET /?hash=", () => {
     describe("without CRYPTO_KEY", () => {
       it("throws when server is not configured for encryption", async () => {
-        const res = await app.request("/?hash=str-enc:a/4xkic0kY8scM3QRJIiLLtQ3NhZxEudhmd7RZDbsuuguXkamhZe0HdW9LmnZxtGCtf0GAPO5II85fE8rSkdFNIbBATyS/INKM0hmw==:a4S74z7c4DQVtijl");
+        const res = await app.request(
+          "/?hash=str-enc:a/4xkic0kY8scM3QRJIiLLtQ3NhZxEudhmd7RZDbsuuguXkamhZe0HdW9LmnZxtGCtf0GAPO5II85fE8rSkdFNIbBATyS/INKM0hmw==:a4S74z7c4DQVtijl",
+        );
         const body = await res.json();
         expect(res.status).toBe(400);
         expect(body.message).toMatch(/This server is not configured for encryption/);
@@ -78,13 +80,21 @@ suite("app", () => {
 
     describe("with CRYPTO_KEY", () => {
       beforeEach(async () => {
-        const cryptoKey = '{"kty":"oct","k":"cq8cebOn49gXxcjoRbjP93z4OpzCkyz4WJSgPnvR4ds","alg":"A256GCM","key_ops":["encrypt","decrypt"],"ext":true}';
+        const cryptoKey =
+          '{"kty":"oct","k":"cq8cebOn49gXxcjoRbjP93z4OpzCkyz4WJSgPnvR4ds","alg":"A256GCM","key_ops":["encrypt","decrypt"],"ext":true}';
         const stringEncrypter = await StringEncrypter.fromCryptoString(cryptoKey);
-        app = createApplication(browserPool, imageRenderService, imageStorageService, stringEncrypter);
+        app = createApplication(
+          browserPool,
+          imageRenderService,
+          imageStorageService,
+          stringEncrypter,
+        );
       });
 
       it("succeeds!", async () => {
-        const res = await app.request("/?hash=str-enc:a/4xkic0kY8scM3QRJIiLLtQ3NhZxEudhmd7RZDbsuuguXkamhZe0HdW9LmnZxtGCtf0GAPO5II85fE8rSkdFNIbBATyS/INKM0hmw==:a4S74z7c4DQVtijl");
+        const res = await app.request(
+          "/?hash=str-enc:a/4xkic0kY8scM3QRJIiLLtQ3NhZxEudhmd7RZDbsuuguXkamhZe0HdW9LmnZxtGCtf0GAPO5II85fE8rSkdFNIbBATyS/INKM0hmw==:a4S74z7c4DQVtijl",
+        );
         expect(res.status).toBe(200);
       });
     });
