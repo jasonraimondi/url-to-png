@@ -1,41 +1,59 @@
-import helmet from "@fastify/helmet";
-import rateLimit from "@fastify/rate-limit";
-import { NestFactory } from "@nestjs/core";
-import { ValidationPipe } from "@nestjs/common";
-import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import "dotenv/config";
 
-import { ApplicationModule } from "./app.module";
-import { winstonLogger } from "./winston-logger";
+import { serve } from "@hono/node-server";
+import { StringEncrypter } from "@jmondi/string-encrypt-decrypt";
 
+import { createApplication } from "./app.js";
+import { BrowserPool } from "./lib/browser_pool.js";
+import {
+  createBrowserPool,
+  createImageRenderService,
+  createImageStorageService,
+} from "./lib/factory.js";
+import { logger } from "./lib/logger.js";
 
-if (process.env.AWS_ACCESS_KEY) {
-  console.warn("AWS_ACCESS_KEY is deprecated, please use AWS_ACCESS_KEY_ID");
-}
+let server: ReturnType<typeof serve>;
 
-if (process.env.AWS_SECRET_KEY) {
-  console.warn("AWS_SECRET_KEY is deprecated, please use AWS_SECRET_ACCESS_KEY");
-}
+async function main() {
+  const encryptionService = process.env.CRYPTO_KEY
+    ? await StringEncrypter.fromCryptoString(process.env.CRYPTO_KEY)
+    : undefined;
 
-if (process.env.AWS_REGION) {
-  console.warn("AWS_REGION is deprecated, please use AWS_DEFAULT_REGION");
-}
+  const imageStorageService = createImageStorageService();
 
-async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(ApplicationModule, new FastifyAdapter(), {
-    logger: winstonLogger,
+  const browserPool: BrowserPool = createBrowserPool();
+
+  const imageRenderService = createImageRenderService(browserPool);
+
+  const app = createApplication(
+    browserPool,
+    imageRenderService,
+    imageStorageService,
+    encryptionService,
+  );
+
+  const port = Number(process.env.PORT) || 3089;
+  server = serve({ fetch: app.fetch, port });
+
+  process.on("SIGINT", async () => {
+    logger.info("Playwright Shutdown [STARTING]");
+    logger.info("Playwright Shutdown [DONE]");
+    logger.info("Server Shutdown [STARTING]");
+    server?.close();
+    await browserPool.drain();
+    logger.info("Server Shutdown [DONE]");
+    logger.info("EXITING...");
+    process.exit(0);
   });
 
-  app.useGlobalPipes(new ValidationPipe());
-  app.enableShutdownHooks();
-
-  await app.register(rateLimit, { max: 100, timeWindow: "1 minute" });
-  await app.register(helmet, { contentSecurityPolicy: false });
-
-  await app.listen(3000, "0.0.0.0");
+  logger.info(`Server is running on port http://localhost:${port}/ping`);
+  if (process.env.NODE_ENV === "development") {
+    logger.info(`http://localhost:${port}/?url=https://jasonraimondi.com/resume&isFullPage=true`);
+  }
 }
 
-bootstrap()
+main()
   .then()
-  .catch((err) => {
-    winstonLogger.error(JSON.stringify(err));
+  .catch(err => {
+    logger.error(err);
   });
