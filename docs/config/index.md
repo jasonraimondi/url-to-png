@@ -1,6 +1,6 @@
 # Configuration
 
-URL-to-PNG allows you to configure various settings through environment variables. Here are the available configuration options:
+Configure various settings through environment variables.
 
 ## General Settings
 
@@ -32,28 +32,39 @@ URL-to-PNG allows you to configure various settings through environment variable
 
 ## Storage Providers
 
-- `STORAGE_PROVIDER`: Storage provider to use. Valid options: `stub`, `s3`, `couchdb`, `filesystem`. Default: `stub`.
+The project supports multiple storage providers for caching rendered images. The storage provider can be configured using the `STORAGE_PROVIDER` environment variable. The available storage providers are:
 
-### Filesystem Storage Provider
+### Stub Storage Provider (default)
 
-- `IMAGE_STORAGE_PATH`: Path to store images when using the filesystem storage provider.
+The stub storage provider is a placeholder storage provider that doesn't actually store or retrieve images, it simply logs debug messages. It can be used for testing or when storage functionality is not required.
 
-### S3 Storage Provider
+### Filesystem
 
-- `AWS_BUCKET`: AWS S3 bucket name.
-- `AWS_ACCESS_KEY_ID`: AWS access key ID.
-- `AWS_SECRET_ACCESS_KEY`: AWS secret access key.
-- `AWS_DEFAULT_REGION`: AWS default region. Default: `us-east-1`.
-- `AWS_ENDPOINT_URL_S3`: AWS S3 endpoint URL.
-- `AWS_FORCE_PATH_STYLE`: Force path-style URLs for S3. Default: `false`.
+The filesystem storage provider allows storing and retrieving rendered images on the local filesystem.
 
-### CouchDB Storage Provider
+- `STORAGE_PROVIDER`: `"filesystem"`
+- `IMAGE_STORAGE_PATH`: The directory path where images will be stored
 
-- `COUCH_DB_HOST`: CouchDB host.
-- `COUCH_DB_PASS`: CouchDB password.
-- `COUCH_DB_PORT`: CouchDB port.
-- `COUCH_DB_PROTOCOL`: CouchDB protocol.
-- `COUCH_DB_USER`: CouchDB username.
-- `COUCHDB_DATABASE`: CouchDB database name. Default: `images`.
+### S3
 
-To configure URL-to-PNG, set the appropriate environment variables either in your `.env` file or pass them as environment variables to your Docker container.
+The S3 compatible storage provider allows storing and retrieving rendered images using Amazon S3.
+
+- `STORAGE_PROVIDER`: `"s3"`
+- `AWS_BUCKET`: The name of the S3 bucket to store images
+- `AWS_ACCESS_KEY_ID`: The AWS access key ID
+- `AWS_SECRET_ACCESS_KEY`: The AWS secret access key
+- `AWS_DEFAULT_REGION`: The AWS region for S3 (default: "us-east-1")
+- `AWS_FORCE_PATH_STYLE`: Set to `true` to use path-style URLs for S3 (default: `false`)
+- `AWS_ENDPOINT_URL_S3`: The endpoint URL for S3 (optional)
+
+### CouchDB
+
+The CouchDB storage provider allows storing and retrieving rendered images using CouchDB.
+
+- `STORAGE_PROVIDER`: `"couchdb"`
+- `COUCH_DB_PROTOCOL`: The protocol for connecting to CouchDB (e.g., "http" or "https")
+- `COUCH_DB_USER`: The CouchDB username
+- `COUCH_DB_PASS`: The CouchDB password
+- `COUCH_DB_HOST`: The CouchDB host
+- `COUCH_DB_PORT`: The CouchDB port
+- `COUCHDB_DATABASE`: The name of the CouchDB database to store images (default: "images")

@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   urltopng:
     image: jasonraimondi/url-to-png
@@ -10,13 +10,13 @@ services:
       LOG_LEVEL: debug
       NODE_ENV: debug
       BROWSER_WAIT_UNTIL: networkidle
-#      STORAGE_PROVIDER: s3
-#      AWS_ACCESS_KEY_ID: miniominiominio
-#      AWS_SECRET_ACCESS_KEY: miniominiominio
-#      AWS_DEFAULT_REGION: us-east-1
-#      AWS_ENDPOINT_URL_S3: http://minio:9000
-#      AWS_FORCE_PATH_STYLE: true
-#      AWS_BUCKET: url-to-png-uploads
+      #      STORAGE_PROVIDER: s3
+      #      AWS_ACCESS_KEY_ID: miniominiominio
+      #      AWS_SECRET_ACCESS_KEY: miniominiominio
+      #      AWS_DEFAULT_REGION: us-east-1
+      #      AWS_ENDPOINT_URL_S3: http://minio:9000
+      #      AWS_FORCE_PATH_STYLE: true
+      #      AWS_BUCKET: url-to-png-uploads
       STORAGE_PROVIDER: couchdb
       COUCH_DB_PROTOCOL: http
       COUCH_DB_HOST: couchdb
