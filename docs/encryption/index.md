@@ -1,5 +1,3 @@
-Here's the README formatted into sections for better readability:
-
 ## Generating an Encryption Key
 
 To enable encryption, first generate a CRYPTO_KEY. You can do this in your browser console using the following JavaScript code:
