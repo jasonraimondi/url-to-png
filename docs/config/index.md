@@ -18,7 +18,7 @@ Configure various settings through environment variables.
 - `BROWSER_TIMEOUT`: Browser timeout in milliseconds for rendering. Default: `10000`.
 - `BROWSER_WAIT_UNTIL`: Event to wait for before considering the page loaded. Valid options: `'load'`, `'domcontentloaded'`, `'networkidle'`. Default: `'domcontentloaded'`.
 
-## Database Connection Pool
+## Connection Pool Options
 
 - `POOL_IDLE_TIMEOUT_MS`: Idle timeout for database connection pool in milliseconds. Default: `15000`.
 - `POOL_MAX`: Maximum number of connections in the database pool. Default: `10`.
