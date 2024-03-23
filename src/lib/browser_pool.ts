@@ -23,9 +23,19 @@ export class BrowserPool {
 
   private factory: Factory<Browser> = {
     async create(): Promise<Browser> {
-      return await chromium.launch({
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
+      try {
+        return await chromium.launch({
+          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
+      } catch (e) {
+        if (e.message.includes("exec playwright install")) {
+          logger.fatal(e.message);
+          process.exit(1);
+        } else {
+          logger.error(e.message);
+        }
+        throw e;
+      }
     },
     async destroy(browser: Browser) {
       await browser.close();
