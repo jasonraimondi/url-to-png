@@ -1,6 +1,6 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
-import { ImageStorage } from "./_base.js";
+import { IMAGE_EXTENSION, ImageStorage } from "./_base.js";
 
 export class AmazonS3StorageProvider implements ImageStorage {
   constructor(
@@ -40,6 +40,6 @@ export class AmazonS3StorageProvider implements ImageStorage {
   }
 
   private getImageId(imageId: string) {
-    return imageId + ".png";
+    return `${imageId}.${IMAGE_EXTENSION}`;
   }
 }

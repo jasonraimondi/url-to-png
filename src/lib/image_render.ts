@@ -3,6 +3,7 @@ import sharp from "sharp";
 import { BrowserPool } from "./browser_pool.js";
 import { logger } from "./logger.js";
 import { IConfigAPI } from "./schema.js";
+import { IMAGE_EXTENSION } from "./storage/_base.js";
 
 export type WaitForOptions = {
   timeout: number;
@@ -77,6 +78,8 @@ export class ImageRenderService implements ImageRenderInterface {
   }
 
   private async resize(image: Buffer, width: number, height: number): Promise<Buffer> {
-    return await sharp(image).resize(width, height).toBuffer();
+    return IMAGE_EXTENSION === "webp"
+      ? await sharp(image).resize(width, height).webp().toBuffer()
+      : await sharp(image).resize(width, height).toBuffer();
   }
 }

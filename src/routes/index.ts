@@ -5,7 +5,7 @@ import { AppEnv } from "../app.js";
 import { ImageRenderInterface } from "../lib/image_render.js";
 import { logger } from "../lib/logger.js";
 
-import { ImageStorage } from "../lib/storage/_base.js";
+import { IMAGE_MIME_TYPE, ImageStorage } from "../lib/storage/_base.js";
 
 export function getIndex(
   imageStorageService: ImageStorage,
@@ -38,7 +38,7 @@ export function getIndex(
     }
 
     return c.body(imageBuffer, 200, {
-      "Content-Type": "image/png",
+      "Content-Type": IMAGE_MIME_TYPE,
       "Cache-Control": process.env.CACHE_CONTROL ?? "public, max-age=86400, immutable",
     });
   };

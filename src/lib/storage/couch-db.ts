@@ -1,7 +1,7 @@
 import md5 from "md5";
 import couchDBNano from "nano";
 
-import { ImageStorage } from "./_base.js";
+import { IMAGE_EXTENSION, IMAGE_MIME_TYPE, ImageStorage } from "./_base.js";
 
 export class CouchDbStorageProvider implements ImageStorage {
   constructor(private readonly couchDB: couchDBNano.ServerScope) {}
@@ -13,7 +13,7 @@ export class CouchDbStorageProvider implements ImageStorage {
   public async fetchImage(imageId: string): Promise<null | Buffer> {
     const imageMd5 = md5(imageId);
     try {
-      return await this.images.attachment.get(imageMd5, `${imageId}.png`);
+      return await this.images.attachment.get(imageMd5, this.imagePath(imageId));
     } catch (err) {
       return null;
     }
@@ -23,12 +23,16 @@ export class CouchDbStorageProvider implements ImageStorage {
     const images = this.images;
     const imageMd5 = md5(imageId);
     try {
-      await images.attachment.get(imageMd5, `${imageId}.png`);
+      await images.attachment.get(imageMd5, this.imagePath(imageId));
       return true;
     } catch (err) {
-      await images.attachment.insert(imageMd5, `${imageId}.png`, image, "image/png");
+      await images.attachment.insert(imageMd5, this.imagePath(imageId), image, IMAGE_MIME_TYPE);
     }
 
     return true;
+  }
+
+  private imagePath(imageId: string) {
+    return `${imageId}.${IMAGE_EXTENSION}`;
   }
 }

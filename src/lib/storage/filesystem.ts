@@ -2,7 +2,7 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import { logger } from "../logger.js";
 
-import { ImageStorage } from "./_base.js";
+import { IMAGE_EXTENSION, ImageStorage } from "./_base.js";
 
 export class FileSystemStorageProvider implements ImageStorage {
   constructor(private readonly storagePath: string) {
@@ -31,7 +31,7 @@ export class FileSystemStorageProvider implements ImageStorage {
   }
 
   private imagePath(imageId: string) {
-    return path.join(this.storagePath, imageId) + ".png";
+    return `${path.join(this.storagePath, imageId)}.${IMAGE_EXTENSION}`;
   }
 
   private async createStorageDirectory(): Promise<void> {
