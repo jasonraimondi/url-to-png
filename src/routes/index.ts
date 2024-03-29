@@ -14,8 +14,9 @@ export function getIndex(
   return async (c: Context<AppEnv>) => {
     const { url, ...input } = c.get("input");
     const imageId = c.get("imageId");
+    const imageOpts = c.get("imageOpts");
 
-    logger.debug({ url, input, imageId });
+    logger.debug({ url, input, imageId, imageOpts });
 
     let imageBuffer: Buffer | null = await imageStorageService.fetchImage(imageId);
 
@@ -37,9 +38,14 @@ export function getIndex(
       throw new HTTPException(500, { message: "Error rendering image" });
     }
 
-    return c.body(imageBuffer, 200, {
-      "Content-Type": "image/png",
-      "Cache-Control": process.env.CACHE_CONTROL ?? "public, max-age=86400, immutable",
-    });
+    const headers: Record<string, string> = {
+      "Content-Type": imageOpts.mime,
+    };
+
+    if (process.env.CACHE_CONTROL) {
+      headers["Cache-Control"] = "public, max-age=86400, immutable";
+    }
+
+    return c.body(imageBuffer, 200, headers);
   };
 }

@@ -5,11 +5,19 @@ import nano from "nano";
 import { BrowserPool } from "./browser_pool.js";
 import { ImageRenderService, WaitForOptions } from "./image_render.js";
 import { logger } from "./logger.js";
-import { ImageStorage } from "./storage/_base.js";
+import { ImageStorage, ImageTypeOpts } from "./storage/_base.js";
 import { CouchDbStorageProvider } from "./storage/couch-db.js";
 import { FileSystemStorageProvider } from "./storage/filesystem.js";
 import { AmazonS3StorageProvider } from "./storage/s3.js";
 import { StubStorageProvider } from "./storage/stub.js";
+
+export function createImageOpts(): ImageTypeOpts {
+  const ext = process.env.DEFAULT_WEBP === "true" ? "webp" : "png";
+  return {
+    ext,
+    mime: `image/${ext}`,
+  };
+}
 
 export function createBrowserPool(opts: Options = {}) {
   return new BrowserPool({ poolOpts: opts });
@@ -28,10 +36,11 @@ export function createImageRenderService(browserPool: BrowserPool) {
       break;
   }
 
-  return new ImageRenderService(browserPool, navigationOptions);
+  return new ImageRenderService(browserPool, navigationOptions, createImageOpts());
 }
 
 export function createImageStorageService(): ImageStorage {
+  const imageOpts = createImageOpts();
   let imageStorage: ImageStorage;
   switch (process.env.STORAGE_PROVIDER) {
     case "s3":
@@ -46,6 +55,7 @@ export function createImageStorageService(): ImageStorage {
           forcePathStyle: process.env.AWS_FORCE_PATH_STYLE === "true",
         }),
         process.env.AWS_BUCKET!,
+        imageOpts,
       );
       break;
     case "couchdb":
@@ -56,15 +66,16 @@ export function createImageStorageService(): ImageStorage {
       const port = process.env.COUCH_DB_PORT;
       imageStorage = new CouchDbStorageProvider(
         nano(`${protocol}://${user}:${pass}@${host}:${port}`),
+        imageOpts
       );
       break;
     case "filesystem":
       const filePath = process.env.IMAGE_STORAGE_PATH!;
-      imageStorage = new FileSystemStorageProvider(filePath);
+      imageStorage = new FileSystemStorageProvider(filePath, imageOpts);
       break;
     case "stub":
     default:
-      imageStorage = new StubStorageProvider();
+      imageStorage = new StubStorageProvider(imageOpts);
   }
 
   logger.info(imageStorage.constructor.name);

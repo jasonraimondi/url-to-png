@@ -49,20 +49,39 @@ suite("app", () => {
   });
 
   describe("GET /?url=", () => {
-    it("succeeds with minimal", async () => {
-      const res = await app.request("/?url=https://google.com");
-      expect(res.status).toBe(200);
+    describe("png", () => {
+      it("succeeds with minimal", async () => {
+        const res = await app.request("/?url=https://google.com");
+        expect(res.headers.get("content-type")).toBe("image/png");
+        expect(res.status).toBe(200);
+      });
+
+      it("succeeds with resize", async () => {
+        const res = await app.request("/?url=https://google.com&width=500&height=500");
+        expect(res.status).toBe(200);
+      });
+
+      it("throws when invalid domain", async () => {
+        const res = await app.request("/?url=bar");
+        expect(res.status).toBe(400);
+        expect(await res.text()).toMatch(/Invalid query/gi);
+      });
     });
 
-    it("succeeds with resize", async () => {
-      const res = await app.request("/?url=https://google.com&width=500&height=500");
-      expect(res.status).toBe(200);
-    });
+    describe("webp", () => {
+      beforeEach(async () => {
+        process.env.DEFAULT_WEBP = "true";
+        const browserPool = createBrowserPool();
+        const imageStorageService = createImageStorageService();
+        const imageRenderService = new StubImageRenderService();
+        app = createApplication(browserPool, imageRenderService, imageStorageService);
+      });
 
-    it("throws when invalid domain", async () => {
-      const res = await app.request("/?url=bar");
-      expect(res.status).toBe(400);
-      expect(await res.text()).toMatch(/Invalid query/gi);
+      it("succeeds with webp", async () => {
+        const res = await app.request("/?url=https://google.com");
+        expect(res.headers.get("content-type")).toBe("image/webp");
+        expect(res.status).toBe(200);
+      });
     });
   });
 
@@ -81,7 +100,7 @@ suite("app", () => {
     describe("with CRYPTO_KEY", () => {
       beforeEach(async () => {
         const cryptoKey =
-          '{"kty":"oct","k":"cq8cebOn49gXxcjoRbjP93z4OpzCkyz4WJSgPnvR4ds","alg":"A256GCM","key_ops":["encrypt","decrypt"],"ext":true}';
+          "{\"kty\":\"oct\",\"k\":\"cq8cebOn49gXxcjoRbjP93z4OpzCkyz4WJSgPnvR4ds\",\"alg\":\"A256GCM\",\"key_ops\":[\"encrypt\",\"decrypt\"],\"ext\":true}";
         const stringEncrypter = await StringEncrypter.fromCryptoString(cryptoKey);
         app = createApplication(
           browserPool,

@@ -1,12 +1,13 @@
 import { StringEncrypter } from "@jmondi/string-encrypt-decrypt";
 import { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { parseForm } from "zod-ff";
+import { parseForm } from "@jmondi/zod-friendly-forms";
 
 import { AppEnv } from "../app.js";
 
 import { PlainConfigSchema } from "../lib/schema.js";
 import { configToString, slugify } from "../lib/utils.js";
+import { ImageTypeOpts } from "../lib/storage/_base.js";
 
 export function handleExtractQueryParamsMiddleware(encryptionService?: StringEncrypter) {
   return async (c: Context<AppEnv>, next: () => Promise<void>) => {
@@ -52,12 +53,16 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
       validData.width = 1920;
     }
 
+    const imageExt: ImageTypeOpts["ext"] = process.env.DEFAULT_WEBP === "true" ? "webp" : "png";
+    const imageMimeType: ImageTypeOpts["mime"] = `image/${imageExt}`;
+
     const date = new Date();
     const dateString = date.toLocaleDateString().replace(/\//g, "-");
-    const imageId = dateString + "." + slugify(validData.url) + configToString(params);
+    const imageId = `${dateString}.${slugify(validData.url)}${configToString(params)}${imageExt}`;
 
     c.set("input", validData);
     c.set("imageId", imageId);
+    c.set("imageOpts", { ext: imageExt, mime: imageMimeType });
 
     await next();
   };

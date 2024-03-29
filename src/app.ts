@@ -7,7 +7,7 @@ import { BrowserPool } from "./lib/browser_pool.js";
 import { ImageRenderInterface } from "./lib/image_render.js";
 import { logger } from "./lib/logger.js";
 import { PlainConfigSchema } from "./lib/schema.js";
-import { ImageStorage } from "./lib/storage/_base.js";
+import { ImageStorage, ImageTypeOpts } from "./lib/storage/_base.js";
 import { formatAllowList } from "./lib/utils.js";
 import { handleAllowListMiddleware } from "./middlewares/allow_list.js";
 import { handleExtractQueryParamsMiddleware } from "./middlewares/extract_query_params.js";
@@ -16,6 +16,7 @@ import { getIndex } from "./routes/index.js";
 export type Variables = {
   input: PlainConfigSchema;
   imageId: string;
+  imageOpts: ImageTypeOpts;
 };
 export type AppEnv = { Variables: Variables };
 
