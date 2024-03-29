@@ -1,7 +1,4 @@
-<h1 align="center">
-  	<img height="100" src="https://res.cloudinary.com/jmondi/image/upload/v1536798191/jasonraimondi.com/url-to-img/url-to-png-logo.png" alt="URL to PNG logo" />
-  	<br /> URL to PNG
-</h1>
+# URL to PNG
 
 [![GitHub License](https://img.shields.io/github/license/jasonraimondi/url-to-png)](https://github.com/jasonraimondi/url-to-png/blob/main/LICENSE)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jasonraimondi/url-to-png/ci.yml?branch=main&style=flat-square)](https://github.com/jasonraimondi/url-to-png)
