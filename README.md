@@ -55,3 +55,7 @@ Learn about [encryption](https://jasonraimondi.github.io/url-to-png/encryption/)
 ## Metrics
 
 Learn about [metrics](https://jasonraimondi.github.io/url-to-png/metrics/)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=jasonraimondi/url-to-png&type=Timeline)](https://star-history.com/#jasonraimondi/url-to-png&Timeline)
