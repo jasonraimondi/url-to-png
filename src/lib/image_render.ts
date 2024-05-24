@@ -65,8 +65,8 @@ export class ImageRenderService implements ImageRenderInterface {
         await page.goto(url, this.NAV_OPTIONS);
         return await this.resize(
           await page.screenshot({ fullPage: !!config.isFullPage }),
-          config.width ?? 1000,
-          config.height ?? 1000,
+          config.width ?? undefined,
+          config.height ?? undefined,
         );
       } finally {
         await page.close();
@@ -76,7 +76,7 @@ export class ImageRenderService implements ImageRenderInterface {
     }
   }
 
-  private async resize(image: Buffer, width: number, height: number): Promise<Buffer> {
+  private async resize(image: Buffer, width?: number, height?: number): Promise<Buffer> {
     return await sharp(image).resize(width, height).toBuffer();
   }
 }
