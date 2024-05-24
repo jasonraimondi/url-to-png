@@ -7,8 +7,19 @@ const zodStringBool = z
   .transform(x => x === "true")
   .pipe(z.boolean());
 
+const zodStringUrl = z
+  .string()
+  .transform(value => {
+    try {
+      return decodeURIComponent(value);
+    } catch (error) {
+      return value;
+    }
+  })
+  .pipe(z.string().url());
+
 export const PlainConfigSchema = z.object({
-  url: z.string().url(),
+  url: zodStringUrl,
   width: z.coerce.number().nullish(),
   height: z.coerce.number().nullish(),
   viewPortWidth: z.coerce.number().nullish(),
