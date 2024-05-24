@@ -1,1 +1,0 @@
-import{_ as e,c as a,o as s,a4 as t}from"./chunks/framework.CuBoVdWv.js";const g=JSON.parse('{"title":"Usage","description":"","frontmatter":{},"headers":[],"relativePath":"usage/index.md","filePath":"usage/index.md"}'),i={name:"usage/index.md"},o=t("",9),l=[o];function n(p,h,c,r,d,u){return s(),a("div",null,l)}const k=e(i,[["render",n]]);export{g as __pageData,k as default};
