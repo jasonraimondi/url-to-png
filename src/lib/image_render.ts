@@ -65,8 +65,8 @@ export class ImageRenderService implements ImageRenderInterface {
         await page.goto(url, this.NAV_OPTIONS);
         return await this.resize(
           await page.screenshot({ fullPage: !!config.isFullPage }),
-          config.width,
-          config.height,
+          config.width ?? undefined,
+          config.height ?? undefined,
         );
       } finally {
         await page.close();

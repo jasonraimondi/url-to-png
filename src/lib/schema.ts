@@ -9,8 +9,8 @@ const zodStringBool = z
 
 export const PlainConfigSchema = z.object({
   url: z.string().url(),
-  width: z.coerce.number().optional(),
-  height: z.coerce.number().optional(),
+  width: z.coerce.number().nullish(),
+  height: z.coerce.number().nullish(),
   viewPortWidth: z.coerce.number().nullish(),
   viewPortHeight: z.coerce.number().nullish(),
   forceReload: zodStringBool.nullish(),
