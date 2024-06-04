@@ -28,8 +28,10 @@ export const PlainConfigSchema = z.object({
   url: urlSchema,
   width: z.coerce.number().nullish(),
   height: z.coerce.number().nullish(),
-  viewPortWidth: z.coerce.number().nullish(),
-  viewPortHeight: z.coerce.number().nullish(),
+  viewportWidth: z.coerce.number().nullish(),
+  viewportHeight: z.coerce.number().nullish(),
+  viewPortWidth: z.coerce.number().nullish(), // deprecated to be removed in v3.x
+  viewPortHeight: z.coerce.number().nullish(), // deprecated to be removed in v3.x
   forceReload: zodStringBool.nullish(),
   isMobile: zodStringBool.nullish(),
   isFullPage: zodStringBool.nullish(),
