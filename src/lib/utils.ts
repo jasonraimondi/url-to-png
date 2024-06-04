@@ -24,3 +24,7 @@ export function slugify(text: string) {
     .replace(/^-+/, "") // Trim - from start of text
     .replace(/-+$/, ""); // Trim - from end of text
 }
+
+const POSITIVE_NUMBER_REGEX = /^\d+$/;
+
+export const isValidNum = (value?: string) => value && POSITIVE_NUMBER_REGEX.test(value);

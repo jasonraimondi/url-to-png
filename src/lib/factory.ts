@@ -10,12 +10,13 @@ import { CouchDbStorageProvider } from "./storage/couch-db.js";
 import { FileSystemStorageProvider } from "./storage/filesystem.js";
 import { AmazonS3StorageProvider } from "./storage/s3.js";
 import { StubStorageProvider } from "./storage/stub.js";
+import { IConfigAPI } from "./schema.js";
 
 export function createBrowserPool(opts: Options = {}) {
   return new BrowserPool({ poolOpts: opts });
 }
 
-export function createImageRenderService(browserPool: BrowserPool) {
+export function createImageRenderService(browserPool: BrowserPool, defaultConfig: IConfigAPI) {
   const navigationOptions: Partial<WaitForOptions> = {};
   switch (process.env.BROWSER_WAIT_UNTIL) {
     case "load":
@@ -24,11 +25,10 @@ export function createImageRenderService(browserPool: BrowserPool) {
       navigationOptions.waitUntil = process.env.BROWSER_WAIT_UNTIL;
       break;
     default:
-      navigationOptions.waitUntil = "domcontentloaded";
       break;
   }
 
-  return new ImageRenderService(browserPool, navigationOptions);
+  return new ImageRenderService(browserPool, defaultConfig, navigationOptions);
 }
 
 export function createImageStorageService(): ImageStorage {

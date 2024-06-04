@@ -35,7 +35,9 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
     if (errors) {
       let message: string = "Invalid query parameters: ";
 
-      const specificErrors = Object.entries(errors).map(([key, value]) => `(${key} - ${value})`).join(" ")
+      const specificErrors = Object.entries(errors)
+        .map(([key, value]) => `(${key} - ${value})`)
+        .join(" ");
 
       message = `${message} ${specificErrors}`;
 
