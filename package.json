@@ -1,9 +1,9 @@
 {
   "name": "@jmondi/url-to-png",
-  "version": "1.3.1",
-  "description": "URL-to-PNG Server",
-  "private": true,
+  "version": "2.0.3",
+  "description": "Start with a url, end up with a png. The Module.",
   "type": "module",
+  "main": "dist/mod.js",
   "scripts": {
     "clean": "rm -rf dist/*",
     "serve": "node -r dotenv/config dist/main.js",
@@ -22,6 +22,10 @@
     "node": ">= 20",
     "pnpm": ">= 8.4.0"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "engineStrict": true,
   "dependencies": {
     "@aws-sdk/client-s3": "^3.583.0",
