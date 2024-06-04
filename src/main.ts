@@ -25,11 +25,11 @@ async function main() {
   const browserPool: BrowserPool = createBrowserPool();
 
   const imageRenderService = createImageRenderService(browserPool, {
-    viewPortWidth: isValidNum(process.env.DEFAULT_VIEW_PORT_WIDTH)
-        ? Number(process.env.DEFAULT_VIEW_PORT_WIDTH)
+    viewportWidth: isValidNum(process.env.DEFAULT_VIEWPORT_WIDTH)
+        ? Number(process.env.DEFAULT_VIEWPORT_WIDTH)
         : 1080,
-    viewPortHeight: isValidNum(process.env.DEFAULT_VIEW_PORT_HEIGHT)
-        ? Number(process.env.DEFAULT_VIEW_PORT_HEIGHT)
+    viewportHeight: isValidNum(process.env.DEFAULT_VIEWPORT_HEIGHT)
+        ? Number(process.env.DEFAULT_VIEWPORT_HEIGHT)
         : 1080,
     isMobile: process.env.DEFAULT_IS_MOBILE === "true",
     isFullPage: process.env.DEFAULT_IS_FULL_PAGE === "true",
