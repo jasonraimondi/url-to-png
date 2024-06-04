@@ -33,7 +33,15 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
     const { validData, errors } = parseForm({ data: input, schema: PlainConfigSchema });
 
     if (errors) {
-      throw new HTTPException(400, { message: "Invalid query parameters", cause: errors });
+      let message: string = "Invalid query parameters: ";
+
+      const specificErrors = Object.entries(errors).map(([key, value]) => `(${key} - ${value})`).join(" ")
+
+      message = `${message} ${specificErrors}`;
+
+      console.log(message);
+
+      throw new HTTPException(400, { message, cause: errors });
     }
 
     if (validData.width && validData.width > 1920) {

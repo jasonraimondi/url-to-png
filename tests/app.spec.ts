@@ -71,6 +71,18 @@ suite("app", () => {
       expect(res.status).toBe(400);
       expect(await res.text()).toMatch(/Invalid query/gi);
     });
+
+    [
+      "file:///etc/passwd&width=4000",
+      "view-source:file:///home/&width=4000",
+      "view-source:file:///home/ec2-user/url-to-png/.env",
+    ].forEach(invalidDomain => {
+      it(`throws when invalid protocol ${invalidDomain}`, async () => {
+        const res = await app.request(`/?url=${invalidDomain}`);
+        expect(res.status).toBe(400);
+        expect(await res.text()).toMatch(/url - must start with http or https/gi);
+      });
+    });
   });
 
   describe("GET /?hash=", () => {
