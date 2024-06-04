@@ -18,33 +18,33 @@ export class ImageRenderService implements ImageRenderInterface {
 
   constructor(
     private readonly browserPool: BrowserPool,
-    navigationOptions: Partial<WaitForOptions>,
+    private readonly DEFAULT_CONFIG: IConfigAPI = {},
+    navigationOptions: Partial<WaitForOptions> = {},
   ) {
     this.NAV_OPTIONS = {
-      waitUntil: "networkidle",
+      waitUntil: "domcontentloaded",
       timeout: Number(process.env.BROWSER_TIMEOUT) || 10000,
       ...navigationOptions,
     };
     logger.debug(`navigation options`);
     logger.debug(this.NAV_OPTIONS);
+    logger.debug(`default config`);
+    logger.debug(this.DEFAULT_CONFIG);
   }
 
   public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer> {
+    const { width = 250, height = 250, ...defaultConfig } = this.DEFAULT_CONFIG;
+
     config = {
-      viewPortWidth: 1080,
-      viewPortHeight: 1080,
-      isMobile: false,
-      isFullPage: false,
-      isDarkMode: false,
-      deviceScaleFactor: 1,
+      ...defaultConfig,
       ...config,
     };
 
     if (!config.width && !config.height) {
-      config.width = 250;
+      config.width = width;
 
       if (!config.isFullPage) {
-        config.height = 250;
+        config.height = height;
       }
     }
 
@@ -65,8 +65,8 @@ export class ImageRenderService implements ImageRenderInterface {
         await page.goto(url, this.NAV_OPTIONS);
         return await this.resize(
           await page.screenshot({ fullPage: !!config.isFullPage }),
-          config.width ?? undefined,
-          config.height ?? undefined,
+          config.width ?? width ?? undefined,
+          config.height ?? height ?? undefined,
         );
       } finally {
         await page.close();
