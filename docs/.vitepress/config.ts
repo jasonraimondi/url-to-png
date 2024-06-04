@@ -21,7 +21,7 @@ export default defineConfig({
     repo: "jasonraimondi/url-to-png",
     docsDir: "docs",
     search: {
-      provider: 'local'
+      provider: "local",
     },
     editLink: {
       pattern: "https://github.com/jasonraimondi/url-to-png/edit/main/docs/:path",
