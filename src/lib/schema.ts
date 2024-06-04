@@ -7,16 +7,7 @@ const zodStringBool = z
   .transform(x => x === "true")
   .pipe(z.boolean());
 
-const zodStringUrl = z
-  .string()
-  .transform(value => {
-    try {
-      return decodeURIComponent(value);
-    } catch (error) {
-      return value;
-    }
-  })
-  .pipe(z.string().url());
+const zodStringUrl = z.string().url();
 
 export const PlainConfigSchema = z.object({
   url: zodStringUrl,
