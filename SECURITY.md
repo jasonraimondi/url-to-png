@@ -3,7 +3,7 @@
 ## Supported Versions
 
 | Version | Latest Version     | Security Updates   |
-|---------|--------------------|--------------------|
+| ------- | ------------------ | ------------------ |
 | 2.x     | :white_check_mark: | :white_check_mark: |
 | 1.x     |                    |                    |
 
