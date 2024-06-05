@@ -62,7 +62,6 @@ suite("app", () => {
     it("succeeds with uri encoded url", async () => {
       const url = encodeURIComponent("https://jasonraimondi.com");
       const res = await app.request(`/?url=${url}`);
-      console.log(`/?url=${url}`);
       expect(res.status).toBe(200);
     });
 
