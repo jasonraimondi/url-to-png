@@ -45,6 +45,7 @@ export class BrowserPool {
   };
 
   constructor({ poolOpts }: BrowserPoolConstructorArgs = {} as BrowserPoolConstructorArgs) {
+    // I need to pull options out of here
     poolOpts = {
       max: Number(process.env.POOL_MAX) || 10,
       min: Number(process.env.POOL_MIN) || 2,
