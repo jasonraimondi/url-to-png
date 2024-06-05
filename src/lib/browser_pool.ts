@@ -3,7 +3,7 @@ import { Factory, Options } from "generic-pool";
 import { Browser, chromium } from "playwright";
 import { logger } from "./logger.js";
 
-type BrowserPoolConstructorArgs = {
+export type BrowserPoolConstructorArgs = {
   poolOpts: Options;
   browserOpts?: never;
 };
