@@ -1,7 +1,6 @@
 import sharp from "sharp";
 
 import { BrowserPool } from "./browser_pool.js";
-import { logger } from "./logger.js";
 import { IConfigAPI } from "./schema.js";
 
 export type WaitForOptions = {
@@ -18,7 +17,7 @@ export class ImageRenderService implements ImageRenderInterface {
 
   constructor(
     private readonly browserPool: BrowserPool,
-    private readonly DEFAULT_CONFIG: IConfigAPI = {},
+    private readonly defaultConfig: IConfigAPI = {},
     navigationOptions: Partial<WaitForOptions> = {},
   ) {
     this.NAV_OPTIONS = {
@@ -26,19 +25,10 @@ export class ImageRenderService implements ImageRenderInterface {
       timeout: Number(process.env.BROWSER_TIMEOUT) || 10000,
       ...navigationOptions,
     };
-    logger.debug(`navigation options`);
-    logger.debug(this.NAV_OPTIONS);
-    logger.debug(`default config`);
-    logger.debug(this.DEFAULT_CONFIG);
   }
 
   public async screenshot(url: string, config: IConfigAPI = {}): Promise<Buffer> {
-    const { width = 250, height = 250, ...defaultConfig } = this.DEFAULT_CONFIG;
-
-    config = {
-      ...defaultConfig,
-      ...config,
-    };
+    let { width, height, ...defaultConfig } = this.defaultConfig;
 
     if (!config.width && !config.height) {
       config.width = width;
@@ -47,6 +37,11 @@ export class ImageRenderService implements ImageRenderInterface {
         config.height = height;
       }
     }
+
+    config = {
+      ...defaultConfig,
+      ...config,
+    };
 
     const browser = await this.browserPool.acquire();
 
@@ -63,10 +58,26 @@ export class ImageRenderService implements ImageRenderInterface {
 
       try {
         await page.goto(url, this.NAV_OPTIONS);
+
+        let resizeWidth = undefined; // config.width ?? undefined;
+        let resizeHeight = undefined; // config.isFullPage ? undefined : config.height ?? undefined;
+
+        if (typeof config.width === "number") {
+          resizeWidth = config.width;
+        }
+
+        if (
+          config.isFullPage &&
+          typeof resizeWidth === "undefined" &&
+          typeof config.height === "number"
+        ) {
+          resizeHeight = config.height;
+        }
+
         return await this.resize(
           await page.screenshot({ fullPage: !!config.isFullPage }),
-          config.width ?? width ?? undefined,
-          config.height ?? height ?? undefined,
+          resizeWidth,
+          resizeHeight,
         );
       } finally {
         await page.close();
@@ -77,6 +88,6 @@ export class ImageRenderService implements ImageRenderInterface {
   }
 
   private async resize(image: Buffer, width?: number, height?: number): Promise<Buffer> {
-    return await sharp(image).resize(width, height).toBuffer();
+    return await sharp(image).resize(width, height, { position: "top" }).toBuffer();
   }
 }

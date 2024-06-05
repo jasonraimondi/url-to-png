@@ -33,6 +33,13 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
 
     const { validData, errors } = parseForm({ data: input, schema: PlainConfigSchema });
 
+    if (validData?.viewPortWidth !== undefined) {
+      logger.warn("'viewPortWidth' is deprecated, please use 'viewportWidth'");
+    }
+    if (validData?.viewPortHeight !== undefined) {
+      logger.warn("'viewPortHeight' is deprecated, please use 'viewportHeight'");
+    }
+
     if (errors) {
       let message: string = "Invalid query parameters: ";
 
@@ -54,13 +61,11 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
     }
 
     const viewportWidth = validData.viewportWidth ?? validData.viewPortWidth;
-    if (validData.viewPortWidth) logger.warn("'viewPortWidth' is deprecated, please use 'viewportWidth'")
     if (viewportWidth && viewportWidth > 1920) {
       validData.width = 1920;
     }
 
     const viewportHeight = validData.viewportHeight ?? validData.viewPortHeight;
-    if (validData.viewPortHeight) logger.warn("'viewPortHeight' is deprecated, please use 'viewportHeight'")
     if (viewportHeight && viewportHeight > 1920) {
       validData.width = 1920;
     }
