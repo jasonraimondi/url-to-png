@@ -11,7 +11,6 @@ import {
   createImageStorageService,
 } from "./lib/factory.js";
 import { logger } from "./lib/logger.js";
-import { isValidNum } from "./lib/utils.js";
 
 let server: ReturnType<typeof serve>;
 
@@ -24,22 +23,7 @@ async function main() {
 
   const browserPool: BrowserPool = createBrowserPool();
 
-  const imageRenderService = createImageRenderService(browserPool, {
-    viewportWidth: isValidNum(process.env.DEFAULT_VIEWPORT_WIDTH)
-        ? Number(process.env.DEFAULT_VIEWPORT_WIDTH)
-        : 1080,
-    viewportHeight: isValidNum(process.env.DEFAULT_VIEWPORT_HEIGHT)
-        ? Number(process.env.DEFAULT_VIEWPORT_HEIGHT)
-        : 1080,
-    isMobile: process.env.DEFAULT_IS_MOBILE === "true",
-    isFullPage: process.env.DEFAULT_IS_FULL_PAGE === "true",
-    isDarkMode: process.env.DEFAULT_IS_DARK_MODE === "true",
-    deviceScaleFactor: isValidNum(process.env.DEFAULT_DEVICE_SCALE_FACTOR)
-      ? Number(process.env.DEFAULT_DEVICE_SCALE_FACTOR)
-      : 1,
-    width: isValidNum(process.env.DEFAULT_WIDTH) ? Number(process.env.DEFAULT_WIDTH) : 250,
-    height: isValidNum(process.env.DEFAULT_HEIGHT) ? Number(process.env.DEFAULT_HEIGHT) : 250,
-  });
+  const imageRenderService = createImageRenderService(browserPool);
 
   const app = createApplication(
     browserPool,
