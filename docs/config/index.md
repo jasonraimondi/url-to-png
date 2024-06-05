@@ -25,6 +25,17 @@ Configure various settings through environment variables.
 - `POOL_MAX_WAITING_CLIENTS`: Maximum number of waiting clients for the database pool. Default: `50`.
 - `POOL_MIN`: Minimum number of connections in the database pool. Default: `2`.
 
+## Default Browser Options
+
+- `DEFAULT_WIDTH`: Default width of the rendered image in pixels. Default: `250`
+- `DEFAULT_HEIGHT`: Default height of the rendered image in pixels. Default: `250`
+- `DEFAULT_VIEWPORT_WIDTH`: Default width of the browser viewport in pixels. Default: `1080`
+- `DEFAULT_VIEWPORT_HEIGHT`: Default height of the browser viewport in pixels. Default: `1080`
+- `DEFAULT_IS_MOBILE`: Whether to emulate a mobile device. Default: `false`
+- `DEFAULT_IS_FULL_PAGE`: Whether to capture the full page or clip the page at the viewport height. Default: `false`
+- `DEFAULT_IS_DARK_MODE`: Whether to request dark mode. Default: `false`
+- `DEFAULT_DEVICE_SCALE_FACTOR`: Default device scale factor (e.g., 2 for retina displays). Default: `1`
+
 ## Metrics and Encryption
 
 - `METRICS`: Enable or disable metrics collection. Default: `false`.
