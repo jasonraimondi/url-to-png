@@ -59,8 +59,8 @@ export class ImageRenderService implements ImageRenderInterface {
       try {
         await page.goto(url, this.NAV_OPTIONS);
 
-        let resizeWidth = undefined; // config.width ?? undefined;
-        let resizeHeight = undefined; // config.isFullPage ? undefined : config.height ?? undefined;
+        let resizeWidth: number | undefined = undefined;
+        let resizeHeight: number | undefined = undefined;
 
         if (typeof config.width === "number") {
           resizeWidth = config.width;

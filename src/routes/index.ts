@@ -15,8 +15,6 @@ export function getIndex(
     const { url, ...input } = c.get("input");
     const imageId = c.get("imageId");
 
-    logger.debug({ url, input, imageId });
-
     let imageBuffer: Buffer | null = await imageStorageService.fetchImage(imageId);
 
     if (imageBuffer === null || input.forceReload) {
