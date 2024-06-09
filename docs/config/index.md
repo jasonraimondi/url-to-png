@@ -20,10 +20,10 @@ Configure various settings through environment variables.
 
 ## Connection Pool Options
 
-- `POOL_IDLE_TIMEOUT_MS`: Idle timeout for database connection pool in milliseconds. Default: `15000`.
-- `POOL_MAX`: Maximum number of connections in the database pool. Default: `10`.
-- `POOL_MAX_WAITING_CLIENTS`: Maximum number of waiting clients for the database pool. Default: `50`.
-- `POOL_MIN`: Minimum number of connections in the database pool. Default: `2`.
+- `POOL_IDLE_TIMEOUT_MS`: Idle timeout for browser connection pool in milliseconds. Default: `15000`.
+- `POOL_MAX`: Maximum number of connections in the browser pool. Default: `10`.
+- `POOL_MAX_WAITING_CLIENTS`: Maximum number of waiting clients for the browser pool. Default: `50`.
+- `POOL_MIN`: Minimum number of connections in the browser pool. Default: `2`.
 
 ## Default Browser Options
 
