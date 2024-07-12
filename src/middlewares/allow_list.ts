@@ -7,7 +7,9 @@ import { logger } from "../lib/logger.js";
 export function handleAllowListMiddleware(allowList: string[]) {
   return async (c: Context<AppEnv>, next: () => Promise<void>) => {
     const input = c.get("input");
-    const isValidDomain = allowList.includes(new URL(input.url).host);
+    const newurl = new URL(input.url).host;
+    logger.info(`URL new: ${newurl}`);
+    const isValidDomain = allowList.includes(newurl);
 
     if (!isValidDomain) {
       logger.warn(`Blocked request to ${input.url} - not in allowlist`);

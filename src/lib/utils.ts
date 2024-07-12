@@ -1,4 +1,4 @@
-export function formatAllowList(allowList: string): string[] {
+export function formatUrlList(allowList: string): string[] {
   return allowList.split(",").map(url => {
     url = url.trim().replace(/https?:\/\//g, "");
     return new URL(`http://${url}`).host;
