@@ -72,7 +72,7 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
 
     const date = new Date();
     const dateString = date.toLocaleDateString().replace(/\//g, "-");
-    const imageId = dateString + "." + slugify(validData.url) + configToString(params);
+    const imageId = dateString + "." + slugify(validData.url) + slugify(configToString(params));
 
     c.set("input", validData);
     c.set("imageId", imageId);
