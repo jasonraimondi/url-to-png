@@ -1,4 +1,3 @@
-// blockedHostsMiddleware.ts
 import { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 

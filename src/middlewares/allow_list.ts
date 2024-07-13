@@ -13,7 +13,7 @@ export function handleAllowListMiddleware(allowList: string[]) {
 
     if (!isValidDomain) {
       logger.warn(`Blocked request to ${input.url} - not in allowlist`);
-      throw new HTTPException(400, { message: "Invalid URL Requested" });
+      throw new HTTPException(403, { message: "Access to this URL is forbidden" });
     }
 
     await next();
