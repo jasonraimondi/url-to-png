@@ -9,9 +9,10 @@ Configure various settings through environment variables.
 - `PORT`: Port number for the application to listen on. Default: `3089`.
 - `CACHE_CONTROL`: Cache-Control header value for the responses. Default: `"public, max-age=86400, immutable"`.
 
-## Allow List
+## AllowBlock List
 
-- `ALLOW_LIST`: Comma-separated list of allowed domains for screenshots. If undefined or empty, all domains are allowed. Example: `ALLOW_LIST=jasonraimondi.com,github.com`.
+- `ALLOW_LIST`: Comma-separated list of **allowed** domains for screenshots. If undefined or empty, all domains are allowed. Example: `ALLOW_LIST=jasonraimondi.com,github.com`.
+- `BLOCK_LIST`: Comma-separated list of **restricted** domains for screenshots. If undefined or empty, all domains are allowed. Example: `BLOCK_LIST=localhost,google.com`.
 
 ## Playwright Options
 
