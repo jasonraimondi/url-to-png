@@ -25,7 +25,7 @@ importers:
         version: 3.9.0
       hono:
         specifier: ^4.3.10
-        version: 4.9.7
+        version: 4.10.2
       md5:
         specifier: ^2.3.0
         version: 2.3.0
@@ -1728,8 +1728,8 @@ packages:
   help-me@5.0.0:
     resolution: {integrity: sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==}
 
-  hono@4.9.7:
-    resolution: {integrity: sha512-t4Te6ERzIaC48W3x4hJmBwgNlLhmiEdEE5ViYb02ffw4ignHNHa5IBtPjmbKstmtKa8X6C35iWwK4HaqvrzG9w==}
+  hono@4.10.2:
+    resolution: {integrity: sha512-p6fyzl+mQo6uhESLxbF5WlBOAJMDh36PljwlKtP5V1v09NxlqGru3ShK+4wKhSuhuYf8qxMmrivHOa/M7q0sMg==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -4579,7 +4579,7 @@ snapshots:
 
   help-me@5.0.0: {}
 
-  hono@4.9.7: {}
+  hono@4.10.2: {}
 
   hookable@5.5.3: {}
 
