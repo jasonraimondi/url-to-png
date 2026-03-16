@@ -1,7 +1,7 @@
 import { StringEncrypter } from "@jmondi/string-encrypt-decrypt";
 import { Hono } from "hono";
 import { secureHeaders } from "hono/secure-headers";
-import { StatusCode } from "hono/utils/http-status";
+import { ContentfulStatusCode } from "hono/utils/http-status";
 
 import { BrowserPool } from "./lib/browser_pool.js";
 import { ImageRenderInterface } from "./lib/image_render.js";
@@ -49,9 +49,9 @@ export function createApplication(
   app.get("/ping", c => c.json("pong"));
 
   app.onError((err, c) => {
-    let status: StatusCode = 500;
+    let status: ContentfulStatusCode = 500;
     if ("status" in err && typeof err.status === "number") {
-      status = err.status as StatusCode;
+      status = err.status as ContentfulStatusCode;
     }
     return c.json({ message: err.message }, status);
   });
