@@ -4,6 +4,10 @@ on:
   release:
     types: [released, prereleased]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -12,22 +16,21 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 9
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
           registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm@latest
       - run: pnpm i --frozen-lockfile --production false
       - run: pnpm build
       - name: Check Release type and Publish
         run: |
           if ${{ github.event.release.prerelease }}; then
             echo "Publishing pre-release..."
-            pnpm publish --verbose --access=public --no-git-checks --tag next
+            npm publish --access=public --tag next
           else
             echo "Publishing release..."
-            pnpm publish --verbose --access=public --no-git-checks
+            npm publish --access=public
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
