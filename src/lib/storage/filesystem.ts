@@ -14,7 +14,9 @@ export class FileSystemStorageProvider implements ImageStorage {
     try {
       return await fs.readFile(imagePath);
     } catch (error) {
-      logger.error(`Error fetching image: ${imagePath}:`, error);
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+        logger.error(`Error fetching image: ${imagePath}:`, error);
+      }
       return null;
     }
   }
