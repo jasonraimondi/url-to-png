@@ -21,14 +21,24 @@ export class CouchDbStorageProvider implements ImageStorage {
 
   public async storeImage(imageId: string, image: Buffer): Promise<boolean> {
     const images = this.images;
-    const imageMd5 = md5(imageId);
+    const docId = md5(imageId);
+    const attachmentName = `${imageId}.png`;
+
+    let rev: string | undefined;
     try {
-      await images.attachment.get(imageMd5, `${imageId}.png`);
-      return true;
-    } catch (err) {
-      await images.attachment.insert(imageMd5, `${imageId}.png`, image, "image/png");
+      const doc = await images.get(docId);
+      rev = doc._rev;
+    } catch {
+      // doc does not exist yet; insert without a rev to create it
     }
 
+    await images.attachment.insert(
+      docId,
+      attachmentName,
+      image,
+      "image/png",
+      rev ? { rev } : undefined,
+    );
     return true;
   }
 }
