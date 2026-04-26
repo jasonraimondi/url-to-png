@@ -5,7 +5,7 @@ import { parseForm } from "zod-ff";
 
 import { AppEnv } from "../app.js";
 
-import { PlainConfigSchema } from "../lib/schema.js";
+import { PlainConfigSchema, clampDimensions } from "../lib/schema.js";
 import { configToString, slugify } from "../lib/utils.js";
 import { logger } from "../lib/logger.js";
 
@@ -52,29 +52,13 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
       throw new HTTPException(400, { message, cause: errors });
     }
 
-    if (validData.width && validData.width > 1920) {
-      validData.width = 1920;
-    }
-
-    if (validData.height && validData.height > 1920) {
-      validData.height = 1920;
-    }
-
-    const viewportWidth = validData.viewportWidth ?? validData.viewPortWidth;
-    if (viewportWidth && viewportWidth > 1920) {
-      validData.width = 1920;
-    }
-
-    const viewportHeight = validData.viewportHeight ?? validData.viewPortHeight;
-    if (viewportHeight && viewportHeight > 1920) {
-      validData.width = 1920;
-    }
+    const clamped = clampDimensions(validData);
 
     const date = new Date();
     const dateString = date.toLocaleDateString().replace(/\//g, "-");
-    const imageId = dateString + "." + slugify(validData.url) + slugify(configToString(params));
+    const imageId = dateString + "." + slugify(clamped.url) + slugify(configToString(params));
 
-    c.set("input", validData);
+    c.set("input", clamped);
     c.set("imageId", imageId);
 
     await next();

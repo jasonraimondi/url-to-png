@@ -42,3 +42,20 @@ export type PlainConfigSchema = z.infer<typeof PlainConfigSchema>;
 export const HashSchema = z.string().startsWith("str-enc:");
 
 export type IConfigAPI = Omit<PlainConfigSchema, "url">;
+
+export const MAX_DIMENSION = 1920;
+
+const clamp = (value: number | null | undefined): number | null | undefined =>
+  typeof value === "number" && value > MAX_DIMENSION ? MAX_DIMENSION : value;
+
+export function clampDimensions(input: PlainConfigSchema): PlainConfigSchema {
+  return {
+    ...input,
+    width: clamp(input.width),
+    height: clamp(input.height),
+    viewportWidth: clamp(input.viewportWidth),
+    viewportHeight: clamp(input.viewportHeight),
+    viewPortWidth: clamp(input.viewPortWidth),
+    viewPortHeight: clamp(input.viewPortHeight),
+  };
+}
