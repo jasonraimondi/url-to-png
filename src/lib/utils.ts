@@ -5,13 +5,24 @@ export function formatUrlList(allowList: string): string[] {
   });
 }
 
+const NON_CACHE_PARAMS = new Set(["url", "hash", "forceReload"]);
+
 export function configToString(configAPI: URLSearchParams) {
-  let result = "";
+  const entries: [string, string][] = [];
   for (const [key, value] of configAPI) {
-    if (key === "url") continue;
-    result += `_${key}-${value}`;
+    if (NON_CACHE_PARAMS.has(key)) continue;
+    entries.push([key, value]);
   }
-  return result;
+  entries.sort(([a], [b]) => a.localeCompare(b));
+  return entries.map(([key, value]) => `_${key}-${value}`).join("");
+}
+
+function isoDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+export function buildImageId(url: string, params: URLSearchParams, date: Date = new Date()): string {
+  return `${isoDate(date)}.${slugify(url)}${slugify(configToString(params))}`;
 }
 
 export function slugify(text: string) {

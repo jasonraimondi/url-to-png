@@ -6,8 +6,17 @@ import { parseForm } from "zod-ff";
 import { AppEnv } from "../app.js";
 
 import { PlainConfigSchema, clampDimensions } from "../lib/schema.js";
-import { configToString, slugify } from "../lib/utils.js";
+import { buildImageId } from "../lib/utils.js";
 import { logger } from "../lib/logger.js";
+
+function inputToParams(input: PlainConfigSchema): URLSearchParams {
+  const out = new URLSearchParams();
+  for (const [key, value] of Object.entries(input)) {
+    if (value === null || value === undefined) continue;
+    out.set(key, String(value));
+  }
+  return out;
+}
 
 export function handleExtractQueryParamsMiddleware(encryptionService?: StringEncrypter) {
   return async (c: Context<AppEnv>, next: () => Promise<void>) => {
@@ -53,10 +62,7 @@ export function handleExtractQueryParamsMiddleware(encryptionService?: StringEnc
     }
 
     const clamped = clampDimensions(validData);
-
-    const date = new Date();
-    const dateString = date.toLocaleDateString().replace(/\//g, "-");
-    const imageId = dateString + "." + slugify(clamped.url) + slugify(configToString(params));
+    const imageId = buildImageId(clamped.url, inputToParams(clamped));
 
     c.set("input", clamped);
     c.set("imageId", imageId);
